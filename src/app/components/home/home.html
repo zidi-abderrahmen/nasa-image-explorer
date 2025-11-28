@@ -1,0 +1,85 @@
+<div class="home-container">
+  <div class="hero-section">
+    <h1>NASA Astronomy Picture of the Day</h1>
+    <p class="subtitle">Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured.</p>
+  </div>
+
+  <div class="content-section">
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading today's astronomical wonder...</p>
+    </div>
+
+    <div *ngIf="error" class="error-container">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadTodayApod()">
+        <mat-icon>refresh</mat-icon>
+        Try Again
+      </button>
+    </div>
+
+    <mat-card *ngIf="!loading && !error && todayApod" class="apod-card">
+      <mat-card-header>
+        <mat-card-title>{{ todayApod.title }}</mat-card-title>
+        <mat-card-subtitle>{{ todayApod.date }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <div class="image-container" *ngIf="todayApod.media_type === 'image'">
+        <img [src]="todayApod.url" [alt]="todayApod.title" mat-card-image>
+      </div>
+
+      <div class="video-container" *ngIf="todayApod.media_type === 'video'">
+        <iframe 
+          [src]="todayApod.url" 
+          frameborder="0" 
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <mat-card-content>
+        <p class="explanation">{{ todayApod.explanation }}</p>
+        <p class="copyright" *ngIf="todayApod.copyright">
+          <mat-icon>copyright</mat-icon>
+          {{ todayApod.copyright }}
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" [routerLink]="['/detail', todayApod.date]">
+          <mat-icon>info</mat-icon>
+          View Details
+        </button>
+        <button mat-raised-button (click)="toggleFavorite()" [color]="isFavorite() ? 'accent' : ''">
+          <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+          {{ isFavorite() ? 'Remove from Favorites' : 'Add to Favorites' }}
+        </button>
+        <a mat-raised-button [href]="todayApod.hdurl || todayApod.url" target="_blank" *ngIf="todayApod.media_type === 'image'">
+          <mat-icon>download</mat-icon>
+          HD Image
+        </a>
+      </mat-card-actions>
+    </mat-card>
+
+    <div class="quick-links" *ngIf="!loading && !error">
+      <h2>Explore More</h2>
+      <div class="link-cards">
+        <mat-card class="link-card" routerLink="/gallery">
+          <mat-icon>photo_library</mat-icon>
+          <h3>Gallery</h3>
+          <p>Browse random astronomical images</p>
+        </mat-card>
+        <mat-card class="link-card" routerLink="/search">
+          <mat-icon>search</mat-icon>
+          <h3>Search</h3>
+          <p>Find images by date or range</p>
+        </mat-card>
+        <mat-card class="link-card" routerLink="/favorites">
+          <mat-icon>favorite</mat-icon>
+          <h3>Favorites</h3>
+          <p>View your saved images</p>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

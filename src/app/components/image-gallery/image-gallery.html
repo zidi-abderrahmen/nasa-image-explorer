@@ -1,0 +1,68 @@
+<div class="gallery-container">
+  <div class="header">
+    <h1>Random Image Gallery</h1>
+    <p>Explore a collection of random astronomical images from NASA's archive</p>
+    <button mat-raised-button color="primary" (click)="loadRandomApods()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Load New Gallery
+    </button>
+  </div>
+
+  <div *ngIf="loading && apods.length === 0" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading gallery...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadRandomApods()">
+      <mat-icon>refresh</mat-icon>
+      Try Again
+    </button>
+  </div>
+
+  <div class="gallery-grid" *ngIf="apods.length > 0">
+    <mat-card *ngFor="let apod of apods" class="gallery-card" [routerLink]="['/detail', apod.date]">
+      <div class="image-wrapper">
+        <img 
+          *ngIf="apod.media_type === 'image'" 
+          [src]="apod.url" 
+          [alt]="apod.title"
+          mat-card-image>
+        <div *ngIf="apod.media_type === 'video'" class="video-placeholder">
+          <mat-icon>play_circle_filled</mat-icon>
+          <span>Video</span>
+        </div>
+        <button 
+          mat-icon-button 
+          class="favorite-btn" 
+          (click)="toggleFavorite(apod, $event)"
+          [class.is-favorite]="isFavorite(apod.date)">
+          <mat-icon>{{ isFavorite(apod.date) ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+      </div>
+      <mat-card-content>
+        <h3 class="card-title">{{ apod.title }}</h3>
+        <mat-chip-set>
+          <mat-chip>{{ apod.date }}</mat-chip>
+          <mat-chip *ngIf="apod.media_type === 'video'">
+            <mat-icon>videocam</mat-icon>
+            Video
+          </mat-chip>
+        </mat-chip-set>
+        <p class="description">
+          {{ apod.explanation.length > 120 ? (apod.explanation.substring(0, 120) + '...') : apod.explanation }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="load-more" *ngIf="apods.length > 0">
+    <button mat-raised-button color="accent" (click)="loadMore()" [disabled]="loading">
+      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+      <mat-icon *ngIf="!loading">add</mat-icon>
+      {{ loading ? 'Loading...' : 'Load More' }}
+    </button>
+  </div>
+</div>

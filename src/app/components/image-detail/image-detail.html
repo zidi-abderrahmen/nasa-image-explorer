@@ -1,0 +1,129 @@
+<div class="detail-container">
+  <div class="back-button">
+    <button mat-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading image details...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>home</mat-icon>
+      Go Home
+    </button>
+  </div>
+
+  <mat-card *ngIf="!loading && !error && apod" class="detail-card">
+    <mat-card-header>
+      <mat-card-title>{{ apod.title }}</mat-card-title>
+      <mat-card-subtitle>
+        <mat-chip-set>
+          <mat-chip>
+            <mat-icon>calendar_today</mat-icon>
+            {{ apod.date }}
+          </mat-chip>
+          <mat-chip *ngIf="apod.media_type === 'video'">
+            <mat-icon>videocam</mat-icon>
+            Video
+          </mat-chip>
+          <mat-chip *ngIf="apod.copyright">
+            <mat-icon>copyright</mat-icon>
+            {{ apod.copyright }}
+          </mat-chip>
+        </mat-chip-set>
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <div class="media-container">
+      <div *ngIf="apod.media_type === 'image'" class="image-wrapper">
+        <img [src]="apod.hdurl || apod.url" [alt]="apod.title">
+      </div>
+
+      <div *ngIf="apod.media_type === 'video'" class="video-wrapper">
+        <iframe 
+          [src]="safeUrl" 
+          frameborder="0" 
+          allowfullscreen
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+        </iframe>
+      </div>
+    </div>
+
+    <mat-card-content>
+      <mat-divider></mat-divider>
+      
+      <div class="info-section">
+        <h3>
+          <mat-icon>description</mat-icon>
+          Description
+        </h3>
+        <p class="explanation">{{ apod.explanation }}</p>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="metadata">
+        <div class="metadata-item">
+          <mat-icon>event</mat-icon>
+          <div>
+            <strong>Date</strong>
+            <span>{{ apod.date }}</span>
+          </div>
+        </div>
+        <div class="metadata-item">
+          <mat-icon>photo</mat-icon>
+          <div>
+            <strong>Media Type</strong>
+            <span>{{ apod.media_type === 'image' ? 'Image' : 'Video' }}</span>
+          </div>
+        </div>
+        <div class="metadata-item" *ngIf="apod.copyright">
+          <mat-icon>copyright</mat-icon>
+          <div>
+            <strong>Copyright</strong>
+            <span>{{ apod.copyright }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="toggleFavorite()">
+        <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+        {{ isFavorite() ? 'Remove from Favorites' : 'Add to Favorites' }}
+      </button>
+      <a 
+        mat-raised-button 
+        color="accent"
+        [href]="apod.hdurl || apod.url" 
+        target="_blank" 
+        download
+        *ngIf="apod.media_type === 'image'">
+        <mat-icon>download</mat-icon>
+        Download HD Image
+      </a>
+      <a 
+        mat-raised-button 
+        [href]="apod.url" 
+        target="_blank"
+        *ngIf="apod.media_type === 'video'">
+        <mat-icon>open_in_new</mat-icon>
+        Watch on YouTube
+      </a>
+      <button mat-raised-button routerLink="/gallery">
+        <mat-icon>photo_library</mat-icon>
+        View Gallery
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

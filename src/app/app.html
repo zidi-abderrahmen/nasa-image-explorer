@@ -1,0 +1,27 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-icon-button routerLink="/">
+    <mat-icon>public</mat-icon>
+  </button>
+  <span class="title">{{ title }}</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <mat-icon>home</mat-icon>
+    Home
+  </button>
+  <button mat-button routerLink="/gallery" routerLinkActive="active">
+    <mat-icon>photo_library</mat-icon>
+    Gallery
+  </button>
+  <button mat-button routerLink="/search" routerLinkActive="active">
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+  <button mat-button routerLink="/favorites" routerLinkActive="active">
+    <mat-icon>favorite</mat-icon>
+    Favorites
+  </button>
+</mat-toolbar>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

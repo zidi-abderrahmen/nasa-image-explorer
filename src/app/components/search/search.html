@@ -1,0 +1,160 @@
+<div class="search-container">
+  <div class="header">
+    <h1>Search NASA APOD</h1>
+    <p>Find astronomical images by date or date range</p>
+  </div>
+
+  <mat-card class="search-card">
+    <mat-card-content>
+      <div class="search-type-toggle">
+        <button 
+          mat-raised-button 
+          [color]="searchType === 'single' ? 'primary' : ''"
+          (click)="setSearchType('single')">
+          <mat-icon>event</mat-icon>
+          Single Date
+        </button>
+        <button 
+          mat-raised-button 
+          [color]="searchType === 'range' ? 'primary' : ''"
+          (click)="setSearchType('range')">
+          <mat-icon>date_range</mat-icon>
+          Date Range
+        </button>
+      </div>
+
+      <div *ngIf="searchType === 'single'" class="search-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select a date</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="picker" 
+            [(ngModel)]="selectedDate"
+            [max]="maxDate"
+            [min]="minDate"
+            placeholder="Choose a date">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-hint>Available from June 16, 1995 to today</mat-hint>
+        </mat-form-field>
+
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="searchByDate()"
+          [disabled]="!selectedDate || loading"
+          class="search-button">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="searchType === 'range'" class="search-form">
+        <div class="date-range-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Start date</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="startPicker" 
+              [(ngModel)]="startDate"
+              [max]="maxDate"
+              [min]="minDate"
+              placeholder="Start date">
+            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End date</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="endPicker" 
+              [(ngModel)]="endDate"
+              [max]="maxDate"
+              [min]="minDate"
+              placeholder="End date">
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-hint class="range-hint">Maximum 100 days range. Available from June 16, 1995 to today</mat-hint>
+
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="searchByRange()"
+          [disabled]="!startDate || !endDate || loading"
+          class="search-button">
+          <mat-icon>search</mat-icon>
+          Search Range
+        </button>
+      </div>
+
+      <button 
+        mat-button 
+        (click)="clearSearch()"
+        *ngIf="searchResults.length > 0"
+        class="clear-button">
+        <mat-icon>clear</mat-icon>
+        Clear Results
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Searching...</p>
+  </div>
+
+  <div *ngIf="error" class="error-container">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="results-section" *ngIf="searchResults.length > 0 && !loading">
+    <h2>Search Results ({{ searchResults.length }})</h2>
+    
+    <div class="results-grid">
+      <mat-card *ngFor="let apod of searchResults" class="result-card" [routerLink]="['/detail', apod.date]">
+        <div class="image-wrapper">
+          <img 
+            *ngIf="apod.media_type === 'image'" 
+            [src]="apod.url" 
+            [alt]="apod.title"
+            mat-card-image>
+          <div *ngIf="apod.media_type === 'video'" class="video-placeholder">
+            <mat-icon>play_circle_filled</mat-icon>
+            <span>Video</span>
+          </div>
+          <button 
+            mat-icon-button 
+            class="favorite-btn" 
+            (click)="toggleFavorite(apod, $event)"
+            [class.is-favorite]="isFavorite(apod.date)">
+            <mat-icon>{{ isFavorite(apod.date) ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </div>
+        <mat-card-content>
+          <h3 class="card-title">{{ apod.title }}</h3>
+          <mat-chip-set>
+            <mat-chip>{{ apod.date }}</mat-chip>
+            <mat-chip *ngIf="apod.media_type === 'video'">
+              <mat-icon>videocam</mat-icon>
+              Video
+            </mat-chip>
+          </mat-chip-set>
+          <p class="description">
+            {{ apod.explanation.length > 120 ? (apod.explanation.substring(0, 120) + '...') : apod.explanation }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="searchResults.length === 0 && !loading && !error">
+    <mat-icon>search</mat-icon>
+    <h3>No searches yet</h3>
+    <p>Select a date or date range above to start searching</p>
+  </div>
+</div>
