@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,7 @@ import { NasaApi } from '../../core/services/nasa-api';
 import { FavoritesService } from '../../core/services/favorites';
 import { Apod } from '../../core/models/apod';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-image-detail',
@@ -36,10 +37,10 @@ export class ImageDetail {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private nasaApi: NasaApi,
     public favoritesService: FavoritesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -81,6 +82,6 @@ export class ImageDetail {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 }
