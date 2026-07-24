@@ -1,14 +1,18 @@
 <div class="search-container">
+  <!-- Header Section -->
   <div class="header">
     <h1>Search NASA APOD</h1>
-    <p>Find astronomical images by date or date range</p>
+    <p class="subtitle">Find astronomical images by date or date range</p>
   </div>
 
-  <mat-card class="search-card">
-    <mat-card-content>
+  <!-- Search Card Control -->
+  <mat-card class="search-card modern-card">
+    <mat-card-content class="search-card-content">
+      <!-- Type Toggle -->
       <div class="search-type-toggle">
         <button 
           mat-raised-button 
+          class="modern-button toggle-btn"
           [color]="searchType === 'single' ? 'primary' : ''"
           (click)="setSearchType('single')">
           <mat-icon>event</mat-icon>
@@ -16,6 +20,7 @@
         </button>
         <button 
           mat-raised-button 
+          class="modern-button toggle-btn"
           [color]="searchType === 'range' ? 'primary' : ''"
           (click)="setSearchType('range')">
           <mat-icon>date_range</mat-icon>
@@ -23,8 +28,9 @@
         </button>
       </div>
 
+      <!-- Single Date Form -->
       <div *ngIf="searchType === 'single'" class="search-form">
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width modern-input">
           <mat-label>Select a date</mat-label>
           <input 
             matInput 
@@ -41,17 +47,18 @@
         <button 
           mat-raised-button 
           color="primary" 
+          class="modern-button search-button"
           (click)="searchByDate()"
-          [disabled]="!selectedDate || loading"
-          class="search-button">
+          [disabled]="!selectedDate || loading">
           <mat-icon>search</mat-icon>
           Search
         </button>
       </div>
 
+      <!-- Date Range Form -->
       <div *ngIf="searchType === 'range'" class="search-form">
         <div class="date-range-fields">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="modern-input">
             <mat-label>Start date</mat-label>
             <input 
               matInput 
@@ -64,7 +71,7 @@
             <mat-datepicker #startPicker></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="modern-input">
             <mat-label>End date</mat-label>
             <input 
               matInput 
@@ -83,14 +90,15 @@
         <button 
           mat-raised-button 
           color="primary" 
+          class="modern-button search-button"
           (click)="searchByRange()"
-          [disabled]="!startDate || !endDate || loading"
-          class="search-button">
+          [disabled]="!startDate || !endDate || loading">
           <mat-icon>search</mat-icon>
           Search Range
         </button>
       </div>
 
+      <!-- Clear Results Action -->
       <button 
         mat-button 
         (click)="clearSearch()"
@@ -102,16 +110,19 @@
     </mat-card-content>
   </mat-card>
 
+  <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
-    <mat-spinner></mat-spinner>
+    <mat-spinner diameter="60"></mat-spinner>
     <p>Searching...</p>
   </div>
 
+  <!-- Error State -->
   <div *ngIf="error" class="error-container">
-    <mat-icon>error_outline</mat-icon>
+    <mat-icon class="status-icon">error_outline</mat-icon>
     <p>{{ error }}</p>
   </div>
 
+  <!-- Search Results Section -->
   <div class="results-section" *ngIf="searchResults.length > 0 && !loading">
     <h2>Search Results ({{ searchResults.length }})</h2>
     
@@ -125,8 +136,11 @@
     </div>
   </div>
 
+  <!-- Empty State -->
   <div class="empty-state" *ngIf="searchResults.length === 0 && !loading && !error">
-    <mat-icon>search</mat-icon>
+    <div class="empty-icon-wrapper">
+      <mat-icon>search</mat-icon>
+    </div>
     <h3>No searches yet</h3>
     <p>Select a date or date range above to start searching</p>
   </div>
