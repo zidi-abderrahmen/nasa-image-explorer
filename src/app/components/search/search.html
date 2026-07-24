@@ -110,10 +110,11 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <mat-spinner diameter="60"></mat-spinner>
-    <p>Searching...</p>
+  <!-- 🆕 Skeleton Loading Grid -->
+  <div class="results-section" *ngIf="loading">
+    <div class="results-grid">
+      <app-apod-skeleton-card *ngFor="let _ of [].constructor(skeletonCount)"></app-apod-skeleton-card>
+    </div>
   </div>
 
   <!-- Error State -->

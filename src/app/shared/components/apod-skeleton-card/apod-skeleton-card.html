@@ -1,0 +1,64 @@
+<mat-card class="apod-card skeleton-card">
+  <!-- Image Area -->
+  <div class="image-wrapper">
+    <ngx-skeleton-loader
+      [theme]="{ 
+        height: '240px', 
+        width: '100%',
+        'border-radius': '20px 20px 0 0'
+      }"
+      appearance="line"
+      animation="progress">
+    </ngx-skeleton-loader>
+  </div>
+
+  <!-- Content Area -->
+  <mat-card-content class="content-modern">
+    <!-- Title -->
+    <ngx-skeleton-loader 
+      [theme]="{ 
+        height: '22px', 
+        width: '80%', 
+        'border-radius': '6px',
+        'margin-bottom': '12px'
+      }"
+      appearance="line"
+      animation="progress">
+    </ngx-skeleton-loader>
+
+    <!-- Chips -->
+    <ngx-skeleton-loader 
+      [theme]="{ 
+        height: '28px', 
+        width: '45%', 
+        'border-radius': '16px',
+        'margin-bottom': '16px'
+      }"
+      appearance="line"
+      animation="progress">
+    </ngx-skeleton-loader>
+
+    <!-- Description Line 1 -->
+    <ngx-skeleton-loader 
+      [theme]="{ 
+        height: '14px', 
+        width: '100%', 
+        'border-radius': '4px',
+        'margin-bottom': '8px'
+      }"
+      appearance="line"
+      animation="progress">
+    </ngx-skeleton-loader>
+
+    <!-- Description Line 2 -->
+    <ngx-skeleton-loader 
+      [theme]="{ 
+        height: '14px', 
+        width: '70%', 
+        'border-radius': '4px'
+      }"
+      appearance="line"
+      animation="progress">
+    </ngx-skeleton-loader>
+  </mat-card-content>
+</mat-card>

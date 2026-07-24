@@ -10,11 +10,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NasaApi } from '../../core/services/nasa-api';
 import { FavoritesService } from '../../core/services/favorites';
 import { Apod } from '../../core/models/apod';
 import { formatDateForApi } from '../../shared/utils/date.utils';
 import { ApodCard } from '../../shared/components/apod-card/apod-card';
+import { ApodSkeletonCard } from '../../shared/components/apod-skeleton-card/apod-skeleton-card';
 
 @Component({
   selector: 'app-search',
@@ -31,7 +33,9 @@ import { ApodCard } from '../../shared/components/apod-card/apod-card';
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    ApodCard
+    NgxSkeletonLoaderModule,
+    ApodCard,
+    ApodSkeletonCard
   ],
   templateUrl: './search.html',
   styleUrl: './search.scss',
@@ -41,12 +45,15 @@ export class Search {
   startDate?: Date;
   endDate?: Date;
   maxDate = new Date();
-  minDate = new Date('1995-06-16'); // First APOD date
+  minDate = new Date('1995-06-16');
   
   searchResults: Apod[] = [];
   loading = false;
   error?: string;
   searchType: 'single' | 'range' = 'single';
+  get skeletonCount(): number {
+    return this.searchType === 'single' ? 1 : 12;
+  }
 
   constructor(
     private nasaApi: NasaApi,
@@ -61,6 +68,7 @@ export class Search {
 
     this.loading = true;
     this.error = undefined;
+    this.searchResults = [];
     const dateStr = formatDateForApi(this.selectedDate);
 
     this.nasaApi.getApodByDate(dateStr).subscribe({
@@ -95,12 +103,13 @@ export class Search {
 
     this.loading = true;
     this.error = undefined;
+    this.searchResults = [];
     const startStr = formatDateForApi(this.startDate);
     const endStr = formatDateForApi(this.endDate);
 
     this.nasaApi.getApodRange(startStr, endStr).subscribe({
       next: (data) => {
-        this.searchResults = data.reverse(); // Show newest first
+        this.searchResults = data.reverse();
         this.loading = false;
       },
       error: (err) => {

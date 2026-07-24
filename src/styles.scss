@@ -69,3 +69,8 @@ body {
 .mat-mdc-raised-button {
   border-radius: 8px !important;
 }
+
+ngx-skeleton-loader .skeleton-loader.progress {
+  background: linear-gradient(90deg, #e8eaf6 25%, #c5cae9 50%, #e8eaf6 75%) !important;
+  background-size: 200% 100% !important;
+}

@@ -9,10 +9,9 @@
     </button>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading && apods.length === 0" class="loading-container">
-    <mat-spinner diameter="60"></mat-spinner>
-    <p>Loading gallery...</p>
+  <!-- 🆕 SKELETON GRID: يظهر في اللودينغ الأولاني -->
+  <div class="gallery-grid" *ngIf="loading && apods.length === 0">
+    <app-apod-skeleton-card *ngFor="let _ of [].constructor(skeletonCount)"></app-apod-skeleton-card>
   </div>
 
   <!-- Error State -->
@@ -27,7 +26,6 @@
 
   <!-- Gallery Grid -->
   <div class="gallery-grid" *ngIf="apods.length > 0">
-    <!-- Notice we can pass down a 'modern-card' class if your child component accepts it -->
     <app-apod-card 
       *ngFor="let apod of apods" 
       [apod]="apod"
