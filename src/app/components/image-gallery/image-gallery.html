@@ -1,39 +1,46 @@
 <div class="gallery-container">
+  <!-- Header Section -->
   <div class="header">
     <h1>Random Image Gallery</h1>
-    <p>Explore a collection of random astronomical images from NASA's archive</p>
-    <button mat-raised-button color="primary" (click)="loadRandomApods()" [disabled]="loading">
+    <p class="subtitle">Explore a collection of random astronomical images from NASA's archive</p>
+    <button mat-raised-button color="primary" class="modern-button" (click)="loadRandomApods()" [disabled]="loading">
       <mat-icon>refresh</mat-icon>
       Load New Gallery
     </button>
   </div>
 
+  <!-- Loading State -->
   <div *ngIf="loading && apods.length === 0" class="loading-container">
-    <mat-spinner></mat-spinner>
+    <mat-spinner diameter="60"></mat-spinner>
     <p>Loading gallery...</p>
   </div>
 
+  <!-- Error State -->
   <div *ngIf="error" class="error-container">
-    <mat-icon>error_outline</mat-icon>
+    <mat-icon class="status-icon">error_outline</mat-icon>
     <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="loadRandomApods()">
+    <button mat-raised-button color="primary" class="modern-button" (click)="loadRandomApods()">
       <mat-icon>refresh</mat-icon>
       Try Again
     </button>
   </div>
 
+  <!-- Gallery Grid -->
   <div class="gallery-grid" *ngIf="apods.length > 0">
+    <!-- Notice we can pass down a 'modern-card' class if your child component accepts it -->
     <app-apod-card 
       *ngFor="let apod of apods" 
       [apod]="apod"
       [isFavorite]="isFavorite(apod.date)"
-      (toggleFavorite)="toggleFavorite(apod, $event)">
+      (toggleFavorite)="toggleFavorite(apod, $event)"
+      class="modern-card-wrapper">
     </app-apod-card>
-</div>
+  </div>
 
+  <!-- Load More Action -->
   <div class="load-more" *ngIf="apods.length > 0">
-    <button mat-raised-button color="accent" (click)="loadMore()" [disabled]="loading">
-      <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+    <button mat-raised-button color="accent" class="modern-button load-more-btn" (click)="loadMore()" [disabled]="loading">
+      <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
       <mat-icon *ngIf="!loading">add</mat-icon>
       {{ loading ? 'Loading...' : 'Load More' }}
     </button>
