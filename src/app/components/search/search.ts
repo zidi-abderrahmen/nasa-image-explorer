@@ -68,7 +68,7 @@ export class Search {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load image for the selected date';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }
@@ -103,7 +103,7 @@ export class Search {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load images for the selected date range';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }

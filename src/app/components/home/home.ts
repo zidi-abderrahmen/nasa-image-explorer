@@ -45,7 +45,7 @@ export class Home {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load today\'s image';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }

@@ -48,7 +48,7 @@ export class ImageGallery {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load images';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }
@@ -63,7 +63,7 @@ export class ImageGallery {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load more images';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }

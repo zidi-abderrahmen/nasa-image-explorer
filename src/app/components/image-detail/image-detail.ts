@@ -63,7 +63,7 @@ export class ImageDetail {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Failed to load image details';
+        this.error = err.message;
         this.loading = false;
         console.error(err);
       }
