@@ -35,9 +35,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "server": "src/main.server.ts",
-            "outputMode": "server",
-            "ssr": false
+            "server": "src/main.server.ts"
           },
           "configurations": {
             "production": {
