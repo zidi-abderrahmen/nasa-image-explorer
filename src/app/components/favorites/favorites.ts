@@ -5,8 +5,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { FavoritesService } from '../../services/favorites';
-import { Apod } from '../../models/apod.model';
+import { FavoritesService } from '../../core/services/favorites';
+import { Apod } from '../../core/models/apod';
 
 @Component({
   selector: 'app-favorites',

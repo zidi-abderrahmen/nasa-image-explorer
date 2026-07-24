@@ -7,9 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { NasaApi } from '../../services/nasa-api';
-import { FavoritesService } from '../../services/favorites';
-import { Apod } from '../../models/apod.model';
+import { NasaApi } from '../../core/services/nasa-api';
+import { FavoritesService } from '../../core/services/favorites';
+import { Apod } from '../../core/models/apod';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({

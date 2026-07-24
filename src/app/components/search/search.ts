@@ -11,9 +11,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
-import { NasaApi } from '../../services/nasa-api';
-import { FavoritesService } from '../../services/favorites';
-import { Apod } from '../../models/apod.model';
+import { NasaApi } from '../../core/services/nasa-api';
+import { FavoritesService } from '../../core/services/favorites';
+import { Apod } from '../../core/models/apod';
 
 @Component({
   selector: 'app-search',

@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NasaApi } from '../../services/nasa-api';
-import { FavoritesService } from '../../services/favorites';
-import { Apod } from '../../models/apod.model';
+import { NasaApi } from '../../core/services/nasa-api';
+import { FavoritesService } from '../../core/services/favorites';
+import { Apod } from '../../core/models/apod';
 
 @Component({
   selector: 'app-home',
