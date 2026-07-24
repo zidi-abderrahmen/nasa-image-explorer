@@ -1,11 +1,12 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Apod } from '../models/apod.model';
+import { Apod } from '../../core/models/apod';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class FavoritesService {
   private readonly STORAGE_KEY = 'nasa_favorites';
   private platformId = inject(PLATFORM_ID);
