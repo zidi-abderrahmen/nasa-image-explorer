@@ -1,27 +1,64 @@
-<mat-toolbar color="primary" class="toolbar">
-  <button mat-icon-button routerLink="/">
-    <mat-icon>public</mat-icon>
-  </button>
-  <span class="title">{{ title }}</span>
-  <span class="spacer"></span>
-  <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-    <mat-icon>home</mat-icon>
-    Home
-  </button>
-  <button mat-button routerLink="/gallery" routerLinkActive="active">
-    <mat-icon>photo_library</mat-icon>
-    Gallery
-  </button>
-  <button mat-button routerLink="/search" routerLinkActive="active">
-    <mat-icon>search</mat-icon>
-    Search
-  </button>
-  <button mat-button routerLink="/favorites" routerLinkActive="active">
-    <mat-icon>favorite</mat-icon>
-    Favorites
-  </button>
-</mat-toolbar>
+<mat-sidenav-container class="app-container">
+  
+  <!-- Mobile Sidebar -->
+  <mat-sidenav #sidenav mode="over" class="mobile-sidenav">
+    <div class="sidenav-header">
+      <mat-icon>public</mat-icon>
+      <span>{{ title }}</span>
+    </div>
+    <div class="sidenav-nav">
+      <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="sidenav.close()">
+        <mat-icon>home</mat-icon> Home
+      </button>
+      <button mat-button routerLink="/gallery" routerLinkActive="active" (click)="sidenav.close()">
+        <mat-icon>photo_library</mat-icon> Gallery
+      </button>
+      <button mat-button routerLink="/search" routerLinkActive="active" (click)="sidenav.close()">
+        <mat-icon>search</mat-icon> Search
+      </button>
+      <button mat-button routerLink="/favorites" routerLinkActive="active" (click)="sidenav.close()">
+        <mat-icon>favorite</mat-icon> Favorites
+      </button>
+    </div>
+  </mat-sidenav>
 
-<main class="main-content">
-  <router-outlet></router-outlet>
-</main>
+  <!-- Main Content & Toolbar -->
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="toolbar">
+      
+      <!-- Hamburger Menu (Mobile Only) -->
+      <button mat-icon-button (click)="sidenav.toggle()" class="mobile-menu-btn">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <!-- Logo & Title -->
+      <button mat-icon-button routerLink="/" class="desktop-logo-btn">
+        <mat-icon>public</mat-icon>
+      </button>
+      <span class="title">{{ title }}</span>
+      
+      <span class="spacer"></span>
+
+      <!-- Desktop Navigation -->
+      <div class="desktop-nav">
+        <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button mat-button routerLink="/gallery" routerLinkActive="active">
+          <mat-icon>photo_library</mat-icon> Gallery
+        </button>
+        <button mat-button routerLink="/search" routerLinkActive="active">
+          <mat-icon>search</mat-icon> Search
+        </button>
+        <button mat-button routerLink="/favorites" routerLinkActive="active">
+          <mat-icon>favorite</mat-icon> Favorites
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

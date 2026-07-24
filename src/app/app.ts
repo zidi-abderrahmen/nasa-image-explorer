@@ -15,7 +15,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
