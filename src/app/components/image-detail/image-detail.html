@@ -1,39 +1,45 @@
 <div class="detail-container">
+  <!-- Back Navigation -->
   <div class="back-button">
-    <button mat-button (click)="goBack()">
+    <button mat-button class="modern-button back-btn" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
       Back
     </button>
   </div>
 
+  <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
-    <mat-spinner></mat-spinner>
+    <mat-spinner diameter="60"></mat-spinner>
     <p>Loading image details...</p>
   </div>
 
+  <!-- Error State -->
   <div *ngIf="error" class="error-container">
-    <mat-icon>error_outline</mat-icon>
+    <div class="status-icon-wrapper">
+      <mat-icon>error_outline</mat-icon>
+    </div>
     <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="goBack()">
+    <button mat-raised-button color="primary" class="modern-button" (click)="goBack()">
       <mat-icon>home</mat-icon>
       Go Home
     </button>
   </div>
 
-  <mat-card *ngIf="!loading && !error && apod" class="detail-card">
-    <mat-card-header>
+  <!-- Main Detail Card -->
+  <mat-card *ngIf="!loading && !error && apod" class="detail-card modern-card">
+    <mat-card-header class="detail-card-header">
       <mat-card-title>{{ apod.title }}</mat-card-title>
       <mat-card-subtitle>
-        <mat-chip-set>
-          <mat-chip>
+        <mat-chip-set class="modern-chips">
+          <mat-chip class="detail-chip">
             <mat-icon>calendar_today</mat-icon>
             {{ apod.date }}
           </mat-chip>
-          <mat-chip *ngIf="apod.media_type === 'video'">
+          <mat-chip class="detail-chip" *ngIf="apod.media_type === 'video'">
             <mat-icon>videocam</mat-icon>
             Video
           </mat-chip>
-          <mat-chip *ngIf="apod.copyright">
+          <mat-chip class="detail-chip" *ngIf="apod.copyright">
             <mat-icon>copyright</mat-icon>
             {{ apod.copyright }}
           </mat-chip>
@@ -41,6 +47,7 @@
       </mat-card-subtitle>
     </mat-card-header>
 
+    <!-- Media Container -->
     <div class="media-container">
       <div *ngIf="apod.media_type === 'image'" class="image-wrapper">
         <img [src]="apod.hdurl || apod.url" [alt]="apod.title">
@@ -56,8 +63,8 @@
       </div>
     </div>
 
-    <mat-card-content>
-      <mat-divider></mat-divider>
+    <mat-card-content class="detail-card-content">
+      <mat-divider class="modern-divider"></mat-divider>
       
       <div class="info-section">
         <h3>
@@ -67,7 +74,7 @@
         <p class="explanation">{{ apod.explanation }}</p>
       </div>
 
-      <mat-divider></mat-divider>
+      <mat-divider class="modern-divider"></mat-divider>
 
       <div class="metadata">
         <div class="metadata-item">
@@ -94,10 +101,11 @@
       </div>
     </mat-card-content>
 
-    <mat-card-actions>
+    <mat-card-actions class="detail-card-actions">
       <button 
         mat-raised-button 
         color="primary" 
+        class="modern-button"
         (click)="toggleFavorite()">
         <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
         {{ isFavorite() ? 'Remove from Favorites' : 'Add to Favorites' }}
@@ -105,6 +113,7 @@
       <a 
         mat-raised-button 
         color="accent"
+        class="modern-button"
         [href]="apod.hdurl || apod.url" 
         target="_blank" 
         download
@@ -114,13 +123,14 @@
       </a>
       <a 
         mat-raised-button 
+        class="modern-button"
         [href]="apod.url" 
         target="_blank"
         *ngIf="apod.media_type === 'video'">
         <mat-icon>open_in_new</mat-icon>
         Watch on YouTube
       </a>
-      <button mat-raised-button routerLink="/gallery">
+      <button mat-raised-button class="modern-button secondary-action-btn" routerLink="/gallery">
         <mat-icon>photo_library</mat-icon>
         View Gallery
       </button>
