@@ -1,0 +1,75 @@
+.apod-card {
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+    display: block;
+  }
+
+  .video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #1a1a2e;
+    color: white;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  .favorite-btn,
+  .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.9);
+
+    &.is-favorite {
+      color: #e91e63;
+    }
+  }
+
+  .favorite-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(233, 30, 99, 0.9);
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.card-title {
+  margin: 8px 0 4px;
+  font-size: 1.1rem;
+}
+
+.description {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}

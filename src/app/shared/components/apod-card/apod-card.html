@@ -1,0 +1,68 @@
+<mat-card class="apod-card" [routerLink]="['/detail', apod.date]">
+  <div class="image-wrapper">
+    <img 
+      *ngIf="apod.media_type === 'image'" 
+      [src]="apod.url" 
+      [alt]="apod.title"
+      mat-card-image>
+    <div *ngIf="apod.media_type === 'video'" class="video-placeholder">
+      <mat-icon>play_circle_filled</mat-icon>
+      <span>Video</span>
+    </div>
+
+    <button 
+      *ngIf="mode === 'browse'"
+      mat-icon-button 
+      class="favorite-btn" 
+      (click)="onToggleFavorite($event)"
+      [class.is-favorite]="isFavorite">
+      <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+
+    <button 
+      *ngIf="mode === 'favorite'"
+      mat-icon-button 
+      class="remove-btn" 
+      (click)="onRemove($event)"
+      matTooltip="Remove from favorites">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div *ngIf="mode === 'favorite'" class="favorite-badge">
+      <mat-icon>favorite</mat-icon>
+    </div>
+  </div>
+
+  <mat-card-content>
+    <h3 class="card-title">{{ apod.title }}</h3>
+    <mat-chip-set>
+      <mat-chip>
+        <mat-icon *ngIf="mode === 'favorite'">calendar_today</mat-icon>
+        {{ apod.date }}
+      </mat-chip>
+      <mat-chip *ngIf="apod.media_type === 'video'">
+        <mat-icon>videocam</mat-icon>
+        Video
+      </mat-chip>
+      <mat-chip *ngIf="mode === 'favorite' && apod.copyright">
+        <mat-icon>copyright</mat-icon>
+        {{ apod.copyright }}
+      </mat-chip>
+    </mat-chip-set>
+    <p class="description">
+      {{ apod.explanation.length > descriptionLength 
+          ? (apod.explanation.substring(0, descriptionLength) + '...') 
+          : apod.explanation }}
+    </p>
+  </mat-card-content>
+  
+  <mat-card-actions *ngIf="mode === 'favorite'">
+    <button mat-button color="primary">
+      <mat-icon>info</mat-icon>
+      View Details
+    </button>
+    <button mat-button (click)="onRemove($event)">
+      <mat-icon>delete</mat-icon>
+      Remove
+    </button>
+  </mat-card-actions>
+</mat-card>

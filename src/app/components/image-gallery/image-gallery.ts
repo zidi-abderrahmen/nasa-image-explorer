@@ -1,26 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatChipsModule } from '@angular/material/chips';
 import { NasaApi } from '../../core/services/nasa-api';
 import { FavoritesService } from '../../core/services/favorites';
 import { Apod } from '../../core/models/apod';
+import { ApodCard } from '../../shared/components/apod-card/apod-card';
 
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    ApodCard
   ],
   templateUrl: './image-gallery.html',
   styleUrl: './image-gallery.scss',

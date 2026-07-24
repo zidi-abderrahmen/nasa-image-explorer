@@ -116,39 +116,12 @@
     <h2>Search Results ({{ searchResults.length }})</h2>
     
     <div class="results-grid">
-      <mat-card *ngFor="let apod of searchResults" class="result-card" [routerLink]="['/detail', apod.date]">
-        <div class="image-wrapper">
-          <img 
-            *ngIf="apod.media_type === 'image'" 
-            [src]="apod.url" 
-            [alt]="apod.title"
-            mat-card-image>
-          <div *ngIf="apod.media_type === 'video'" class="video-placeholder">
-            <mat-icon>play_circle_filled</mat-icon>
-            <span>Video</span>
-          </div>
-          <button 
-            mat-icon-button 
-            class="favorite-btn" 
-            (click)="toggleFavorite(apod, $event)"
-            [class.is-favorite]="isFavorite(apod.date)">
-            <mat-icon>{{ isFavorite(apod.date) ? 'favorite' : 'favorite_border' }}</mat-icon>
-          </button>
-        </div>
-        <mat-card-content>
-          <h3 class="card-title">{{ apod.title }}</h3>
-          <mat-chip-set>
-            <mat-chip>{{ apod.date }}</mat-chip>
-            <mat-chip *ngIf="apod.media_type === 'video'">
-              <mat-icon>videocam</mat-icon>
-              Video
-            </mat-chip>
-          </mat-chip-set>
-          <p class="description">
-            {{ apod.explanation.length > 120 ? (apod.explanation.substring(0, 120) + '...') : apod.explanation }}
-          </p>
-        </mat-card-content>
-      </mat-card>
+      <app-apod-card 
+        *ngFor="let apod of searchResults" 
+        [apod]="apod"
+        [isFavorite]="isFavorite(apod.date)"
+        (toggleFavorite)="toggleFavorite(apod, $event)">
+      </app-apod-card>
     </div>
   </div>
 

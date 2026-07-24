@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { FavoritesService } from '../../core/services/favorites';
 import { Apod } from '../../core/models/apod';
+import { ApodCard } from '../../shared/components/apod-card/apod-card';
 
 @Component({
   selector: 'app-favorites',
@@ -17,7 +18,8 @@ import { Apod } from '../../core/models/apod';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    ApodCard
   ],
   templateUrl: './favorites.html',
   styleUrl: './favorites.scss',

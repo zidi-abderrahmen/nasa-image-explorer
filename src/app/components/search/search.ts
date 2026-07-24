@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +13,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { NasaApi } from '../../core/services/nasa-api';
 import { FavoritesService } from '../../core/services/favorites';
 import { Apod } from '../../core/models/apod';
+import { formatDateForApi } from '../../shared/utils/date.utils';
+import { ApodCard } from '../../shared/components/apod-card/apod-card';
 
 @Component({
   selector: 'app-search',
@@ -21,7 +22,6 @@ import { Apod } from '../../core/models/apod';
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -30,7 +30,8 @@ import { Apod } from '../../core/models/apod';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatChipsModule
+    MatChipsModule,
+    ApodCard
   ],
   templateUrl: './search.html',
   styleUrl: './search.scss',
@@ -60,7 +61,7 @@ export class Search {
 
     this.loading = true;
     this.error = undefined;
-    const dateStr = this.formatDate(this.selectedDate);
+    const dateStr = formatDateForApi(this.selectedDate);
 
     this.nasaApi.getApodByDate(dateStr).subscribe({
       next: (data) => {
@@ -94,8 +95,8 @@ export class Search {
 
     this.loading = true;
     this.error = undefined;
-    const startStr = this.formatDate(this.startDate);
-    const endStr = this.formatDate(this.endDate);
+    const startStr = formatDateForApi(this.startDate);
+    const endStr = formatDateForApi(this.endDate);
 
     this.nasaApi.getApodRange(startStr, endStr).subscribe({
       next: (data) => {
@@ -108,13 +109,6 @@ export class Search {
         console.error(err);
       }
     });
-  }
-
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
   }
 
   setSearchType(type: 'single' | 'range'): void {
