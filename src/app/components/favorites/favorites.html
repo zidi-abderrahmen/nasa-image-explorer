@@ -55,8 +55,10 @@
   <div class="favorites-count" *ngIf="favorites.length > 0">
     <mat-chip-set class="modern-chips">
       <mat-chip class="favorite-count-chip">
-        <mat-icon>favorite</mat-icon>
-        {{ favorites.length }} {{ favorites.length === 1 ? 'Favorite' : 'Favorites' }}
+        <div class="chip-content">
+          <mat-icon>favorite</mat-icon>
+          <span>{{ favorites.length }} {{ favorites.length === 1 ? 'Favorite' : 'Favorites' }}</span>
+        </div>
       </mat-chip>
     </mat-chip-set>
   </div>
