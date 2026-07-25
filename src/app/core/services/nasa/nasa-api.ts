@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Apod } from '../../core/models/apod';
+import { Apod } from '../../models/apod';
 import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({

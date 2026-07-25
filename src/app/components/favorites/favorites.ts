@@ -5,7 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-import { FavoritesService } from '../../core/services/favorites';
+import { FavoritesService } from '../../core/services/favorites/favorites';
 import { Apod } from '../../core/models/apod';
 import { ApodCard } from '../../shared/components/apod-card/apod-card';
 

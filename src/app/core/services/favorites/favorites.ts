@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Apod } from '../../core/models/apod';
+import { Apod } from '../../models/apod';
 
 @Injectable({
   providedIn: 'root',

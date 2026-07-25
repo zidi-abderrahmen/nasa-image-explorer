@@ -4,11 +4,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { NasaApi } from '../../core/services/nasa-api';
-import { FavoritesService } from '../../core/services/favorites';
+import { NasaApi } from '../../core/services/nasa/nasa-api';
+import { FavoritesService } from '../../core/services/favorites/favorites';
 import { Apod } from '../../core/models/apod';
 import { ApodCard } from '../../shared/components/apod-card/apod-card';
 import { ApodSkeletonCard } from '../../shared/components/apod-skeleton-card/apod-skeleton-card';
+import { GalleryState } from '../../core/services/gallery/gallery-state';
 
 @Component({
   selector: 'app-image-gallery',
@@ -33,11 +34,18 @@ export class ImageGallery {
 
   constructor(
     private nasaApi: NasaApi,
-    public favoritesService: FavoritesService
+    public favoritesService: FavoritesService,
+    private galleryState: GalleryState
   ) {}
 
   ngOnInit(): void {
-    this.loadRandomApods();
+    this.galleryState.apods$.subscribe(apods => {
+      this.apods = apods;
+    });
+
+    if (this.galleryState.currentApods.length === 0) {
+      this.loadRandomApods();
+    }
   }
 
   loadRandomApods(): void {
@@ -46,7 +54,7 @@ export class ImageGallery {
     this.apods = [];
     this.nasaApi.getRandomApods(this.skeletonCount).subscribe({
       next: (data) => {
-        this.apods = data;
+        this.galleryState.setApods(data); 
         this.loading = false;
       },
       error: (err) => {
@@ -61,7 +69,7 @@ export class ImageGallery {
     this.loading = true;
     this.nasaApi.getRandomApods(12).subscribe({
       next: (data) => {
-        this.apods = [...this.apods, ...data];
+        this.galleryState.addApods(data);
         this.loading = false;
       },
       error: (err) => {
