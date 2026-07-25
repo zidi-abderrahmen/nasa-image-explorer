@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NasaApi } from '../../core/services/nasa/nasa-api';
 import { FavoritesService } from '../../core/services/favorites/favorites';
 import { Apod } from '../../core/models/apod';
+import { HomeImageState } from '../../core/services/home/home-image-state';
 
 @Component({
   selector: 'app-home',
@@ -30,18 +31,27 @@ export class Home {
 
   constructor(
     private nasaApi: NasaApi,
-    public favoritesService: FavoritesService
+    public favoritesService: FavoritesService,
+    private homeImageState: HomeImageState
   ) {}
 
   ngOnInit(): void {
-    this.loadTodayApod();
+    this.homeImageState.apod$.subscribe(apod => {
+      this.todayApod = apod;
+    });
+
+    if (!this.homeImageState.currentApod) {
+      this.loadTodayApod();
+    } else {
+      this.loading = false;
+    }
   }
 
   loadTodayApod(): void {
     this.loading = true;
     this.nasaApi.getTodayApod().subscribe({
       next: (data) => {
-        this.todayApod = data;
+        this.homeImageState.setApod(data);
         this.loading = false;
       },
       error: (err) => {
