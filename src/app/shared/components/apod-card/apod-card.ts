@@ -24,6 +24,15 @@ export class ApodCard {
   @Output() toggleFavorite = new EventEmitter<Event>();
   @Output() remove = new EventEmitter<Event>();
 
+  isImageLoaded = false;
+
+  onImageLoad(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.decode()
+      .then(() => this.isImageLoaded = true)
+      .catch(() => this.isImageLoaded = true);
+  }
+
   onToggleFavorite(event: Event): void {
     event.stopPropagation();
     this.toggleFavorite.emit(event);
