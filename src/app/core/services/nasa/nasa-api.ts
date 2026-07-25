@@ -28,6 +28,6 @@ export class NasaApi {
   }
 
   getRandomApods(count: number = 10): Observable<Apod[]> {
-    return this.http.get<Apod[]>(`${this.apiUrl}?api_key=${this.apiKey}&count=${count}`);
+    return this.http.get<Apod[]>(`${this.apiUrl}?api_key=${this.apiKey}&count=${count}&thumbs=true`);
   }
 }

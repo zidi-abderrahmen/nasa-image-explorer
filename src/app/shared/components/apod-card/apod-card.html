@@ -4,17 +4,16 @@
   <div class="image-wrapper">
   <div class="shimmer" *ngIf="apod.media_type === 'image' && !isImageLoaded"></div>
 
-  <img 
-    *ngIf="apod.media_type === 'image'" 
-    [src]="apod.url" 
+  <img
+    [src]="displayImageUrl" 
     [alt]="apod.title"
     (load)="onImageLoad($event)"
     [class.loaded]="isImageLoaded"
     mat-card-image>
 
-  <div *ngIf="apod.media_type === 'video'" class="video-placeholder">
+  <!-- The Video Overlay -->
+  <div *ngIf="apod.media_type === 'video' && apod.thumbnail_url" class="video-overlay">
     <mat-icon>play_circle_filled</mat-icon>
-    <span>Video</span>
   </div>
 
     <!-- Favorite Toggle (Browse Mode) -->

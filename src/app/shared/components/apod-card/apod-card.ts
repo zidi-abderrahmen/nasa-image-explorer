@@ -42,4 +42,11 @@ export class ApodCard {
     event.stopPropagation();
     this.remove.emit(event);
   }
+
+  get displayImageUrl(): string {
+    if (this.apod.media_type === 'video' && this.apod.thumbnail_url) {
+      return this.apod.thumbnail_url;
+    }
+    return this.apod.url;
+  }
 }
