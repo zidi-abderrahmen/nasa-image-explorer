@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withPreloading, PreloadAllModules, withComponentInputBinding } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideClientHydration } from '@angular/platform-browser';
@@ -12,7 +12,11 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withInterceptors([errorInterceptor])),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    provideRouter(
+      routes,
+      withPreloading(PreloadAllModules),
+      withComponentInputBinding()
+    ),
     provideAnimationsAsync(),
     provideClientHydration()
   ]
