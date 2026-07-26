@@ -10,10 +10,10 @@ import { FavoritesService } from '../../core/services/favorites/favorites';
 import { Apod } from '../../core/models/apod';
 import { HomeImageState } from '../../core/services/home/home-image-state';
 import { DomSanitizer } from '@angular/platform-browser';
-import { SafeUrlPipe } from '../../shared/pipes/safeUrl/safe-url-pipe';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ImageFullscreen, ImageFullscreenData } from '../../shared/components/image-fullscreen/image-fullscreen';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VideoPlayer } from '../video-player/video-player';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +25,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    SafeUrlPipe
+    VideoPlayer
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss',

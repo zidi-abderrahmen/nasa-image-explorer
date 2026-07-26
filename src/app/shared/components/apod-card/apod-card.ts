@@ -11,7 +11,14 @@ import { Apod } from '../../../core/models/apod';
 @Component({
   selector: 'app-apod-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatCardModule, MatIconModule, MatButtonModule, MatChipsModule, MatTooltipModule],
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    MatCardModule, 
+    MatIconModule, 
+    MatButtonModule, 
+    MatChipsModule, 
+    MatTooltipModule],
   templateUrl: './apod-card.html',
   styleUrl: './apod-card.scss',
 })

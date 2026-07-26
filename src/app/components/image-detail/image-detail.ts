@@ -15,6 +15,7 @@ import { Location } from '@angular/common';
 import { ImageFullscreen, ImageFullscreenData } from '../../shared/components/image-fullscreen/image-fullscreen';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { VideoPlayer } from '../video-player/video-player';
 
 @Component({
   selector: 'app-image-detail',
@@ -27,7 +28,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatIconModule,
     MatProgressSpinnerModule,
     MatChipsModule,
-    MatDividerModule
+    MatDividerModule,
+    VideoPlayer
   ],
   templateUrl: './image-detail.html',
   styleUrl: './image-detail.scss',

@@ -125,14 +125,11 @@
 
             <div class="video-container" *ngIf="todayApod.media_type === 'video'">
               <div class="video-wrapper">
-                <iframe 
-                  [src]="todayApod.url | safeUrl" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                  title="{{ todayApod.title }} - Video player"
-                  loading="lazy">
-                </iframe>
+                <app-video-player class="video-player"
+                  [apodUrl]="todayApod.url" 
+                  [title]="todayApod.title"
+                  [thumbnailUrl]="todayApod.thumbnail_url">
+                </app-video-player>
               </div>
             </div>
           </div>
