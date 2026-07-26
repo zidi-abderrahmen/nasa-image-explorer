@@ -308,10 +308,10 @@ The application consumes the **[NASA APOD API](https://api.nasa.gov/)**.
 
 ## 🗺 Roadmap
 
-- [ ] Add infinite scroll to the gallery
-- [ ] Implement dark/light theme toggle
-- [ ] Add sharing link for individual APODs
-- [ ] Support for NASA Image and Video Library (IVL) integration
+- [x] Add infinite scroll to the gallery
+- [x] Implement dark/light theme toggle
+- [x] Add sharing link for individual APODs
+- [x] Support for NASA Image and Video Library (IVL) integration
 
 ---
 
