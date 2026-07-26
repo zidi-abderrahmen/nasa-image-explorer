@@ -1,86 +1,142 @@
-<mat-card class="apod-card modern-card" [routerLink]="['/detail', apod.date]">
-  
+<article 
+  class="apod-card modern-card" 
+  [routerLink]="mode === 'browse' ? ['/detail', apod.date] : null"
+  [attr.role]="mode === 'browse' ? 'link' : 'article'"
+  [attr.aria-label]="apod.title"
+  [class.is-favorite-mode]="mode === 'favorite'">
+
   <!-- Image/Video Wrapper -->
-  <div class="image-wrapper">
-  <div class="shimmer" *ngIf="apod.media_type === 'image' && !isImageLoaded"></div>
-
-  <img
-    [src]="displayImageUrl" 
-    [alt]="apod.title"
-    (load)="onImageLoad($event)"
-    [class.loaded]="isImageLoaded"
-    mat-card-image>
-
-  <!-- The Video Overlay -->
-  <div *ngIf="apod.media_type === 'video' && apod.thumbnail_url" class="video-overlay">
-    <mat-icon>play_circle_filled</mat-icon>
-  </div>
-
-    <!-- Favorite Toggle (Browse Mode) -->
-    <button 
-      *ngIf="mode === 'browse'"
-      mat-icon-button 
-      class="floating-btn favorite-btn" 
-      (click)="onToggleFavorite($event)"
-      [class.is-favorite]="isFavorite">
-      <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
-    </button>
-
-    <!-- Remove Toggle (Favorite Mode) -->
-    <button 
-      *ngIf="mode === 'favorite'"
-      mat-icon-button 
-      class="floating-btn remove-btn" 
-      (click)="onRemove($event)"
-      matTooltip="Remove from favorites">
-      <mat-icon>close</mat-icon>
-    </button>
+  <figure class="image-wrapper">
     
-    <!-- Favorite Badge Indicator -->
-    <div *ngIf="mode === 'favorite'" class="favorite-badge">
+    <!-- Skeleton Loader -->
+    <div class="skeleton-shimmer" *ngIf="apod.media_type === 'image' && !isImageLoaded">
+      <div class="skeleton-image"></div>
+    </div>
+
+    <!-- Image -->
+    <img
+      *ngIf="apod.media_type === 'image'"
+      [src]="displayImageUrl" 
+      [alt]="apod.title"
+      (load)="onImageLoad($event)"
+      [class.loaded]="isImageLoaded"
+      loading="lazy"
+      class="card-image">
+
+    <!-- Video Thumbnail -->
+    <div *ngIf="apod.media_type === 'video'" class="video-thumbnail">
+      <img
+        *ngIf="apod.thumbnail_url; else defaultVideoThumb"
+        [src]="apod.thumbnail_url"
+        [alt]="apod.title + ' - video thumbnail'"
+        loading="lazy"
+        class="card-image video-thumb-img">
+      <ng-template #defaultVideoThumb>
+        <div class="video-placeholder">
+          <mat-icon class="placeholder-icon">videocam</mat-icon>
+        </div>
+      </ng-template>
+      
+      <!-- Video Play Overlay -->
+      <div class="video-overlay" aria-hidden="true">
+        <div class="play-button">
+          <mat-icon>play_arrow</mat-icon>
+        </div>
+        <span class="video-label">Watch Video</span>
+      </div>
+    </div>
+
+    <!-- Hover Overlay (Browse Mode) -->
+    <div class="card-hover-overlay" *ngIf="mode === 'browse'" aria-hidden="true">
+      <span class="view-details">
+        <mat-icon>open_in_full</mat-icon>
+        View Details
+      </span>
+    </div>
+
+    <!-- Floating Actions -->
+    <div class="floating-actions">
+      <!-- Favorite Toggle (Browse Mode) -->
+      <button 
+        *ngIf="mode === 'browse'"
+        mat-icon-button 
+        class="floating-btn favorite-btn" 
+        (click)="onToggleFavorite($event)"
+        [class.is-favorite]="isFavorite"
+        [attr.aria-label]="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+        [attr.aria-pressed]="isFavorite"
+        type="button">
+        <mat-icon>{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+      </button>
+
+      <!-- Remove Button (Favorite Mode) -->
+      <button 
+        *ngIf="mode === 'favorite'"
+        mat-icon-button 
+        class="floating-btn remove-btn" 
+        (click)="onRemove($event)"
+        [matTooltip]="'Remove from favorites'"
+        aria-label="Remove from favorites"
+        type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Favorite Badge (Favorite Mode) -->
+    <div *ngIf="mode === 'favorite'" class="favorite-badge" aria-label="Saved to favorites">
       <mat-icon>favorite</mat-icon>
     </div>
-  </div>
+
+    <!-- Media Type Badge -->
+    <div class="media-type-badge" [class.video]="apod.media_type === 'video'" aria-hidden="true">
+      <mat-icon>{{ apod.media_type === 'video' ? 'videocam' : 'photo' }}</mat-icon>
+      <span>{{ apod.media_type === 'video' ? 'Video' : 'Image' }}</span>
+    </div>
+  </figure>
 
   <!-- Content Section -->
   <mat-card-content class="content-modern">
     <h3 class="card-title">{{ apod.title }}</h3>
     
-    <mat-chip-set class="modern-chips">
-      <mat-chip>
-        <mat-icon *ngIf="mode === 'favorite'">calendar_today</mat-icon>
-        {{ apod.date }}
-      </mat-chip>
-      <mat-chip *ngIf="apod.media_type === 'video'">
-        <mat-icon>videocam</mat-icon>
-        Video
-      </mat-chip>
-      <mat-chip *ngIf="apod.media_type === 'image'">
-        <mat-icon>photo</mat-icon>
-        Image
-      </mat-chip>
-      <mat-chip *ngIf="mode === 'favorite' && apod.copyright">
-        <mat-icon>copyright</mat-icon>
+    <!-- Meta Chips -->
+    <div class="meta-chips">
+      <span class="chip chip-date">
+        <mat-icon aria-hidden="true">calendar_today</mat-icon>
+        <time [attr.datetime]="apod.date">{{ apod.date | date:'mediumDate' }}</time>
+      </span>
+      <span class="chip chip-copyright" *ngIf="mode === 'favorite' && apod.copyright">
+        <mat-icon aria-hidden="true">person</mat-icon>
         {{ apod.copyright }}
-      </mat-chip>
-    </mat-chip-set>
+      </span>
+    </div>
     
-    <p class="description">
+    <!-- Description -->
+    <p class="description" *ngIf="apod.explanation">
       {{ apod.explanation.length > descriptionLength 
-          ? (apod.explanation.substring(0, descriptionLength) + '...') 
+          ? (apod.explanation | slice:0:descriptionLength) + '...' 
           : apod.explanation }}
     </p>
   </mat-card-content>
   
-  <!-- Actions Section -->
+  <!-- Actions Section (Favorite Mode) -->
   <mat-card-actions *ngIf="mode === 'favorite'" class="actions-modern">
-    <button mat-button color="primary" class="modern-action-btn">
-      <mat-icon>info</mat-icon>
+    <a 
+      mat-button 
+      color="primary" 
+      class="modern-action-btn"
+      [routerLink]="['/detail', apod.date]"
+      aria-label="View details for {{ apod.title }}">
+      <mat-icon aria-hidden="true">info</mat-icon>
       View Details
-    </button>
-    <button mat-button color="warn" class="modern-action-btn" (click)="onRemove($event)">
-      <mat-icon>delete</mat-icon>
+    </a>
+    <button 
+      mat-button 
+      color="warn" 
+      class="modern-action-btn" 
+      (click)="onRemove($event)"
+      aria-label="Remove {{ apod.title }} from favorites">
+      <mat-icon aria-hidden="true">delete</mat-icon>
       Remove
     </button>
   </mat-card-actions>
-</mat-card>
+</article>

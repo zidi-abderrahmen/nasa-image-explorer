@@ -1,62 +1,161 @@
-<mat-sidenav-container class="app-container">
+<!-- Skip to content link for accessibility -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<mat-sidenav-container class="app-container" [hasBackdrop]="isMobile">
   
   <!-- Mobile Sidebar -->
-  <mat-sidenav #sidenav mode="over" class="mobile-sidenav">
+  <mat-sidenav 
+    #sidenav 
+    mode="over" 
+    class="mobile-sidenav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    role="navigation"
+    aria-label="Mobile navigation">
+    
     <div class="sidenav-header">
-      <mat-icon>public</mat-icon>
-      <span>{{ title }}</span>
+      <div class="sidenav-brand">
+        <mat-icon class="brand-icon" aria-hidden="true">public</mat-icon>
+        <span class="brand-text">{{ title }}</span>
+      </div>
+      <button 
+        mat-icon-button 
+        class="sidenav-close-btn"
+        (click)="sidenav.close()"
+        aria-label="Close navigation menu">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-    <div class="sidenav-nav">
-      <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="sidenav.close()">
-        <mat-icon>home</mat-icon> Home
-      </button>
-      <button mat-button routerLink="/gallery" routerLinkActive="active" (click)="sidenav.close()">
-        <mat-icon>photo_library</mat-icon> Gallery
-      </button>
-      <button mat-button routerLink="/search" routerLinkActive="active" (click)="sidenav.close()">
-        <mat-icon>search</mat-icon> Search
-      </button>
-      <button mat-button routerLink="/favorites" routerLinkActive="active" (click)="sidenav.close()">
-        <mat-icon>favorite</mat-icon> Favorites
-      </button>
+    
+    <nav class="sidenav-nav">
+      <a 
+        mat-button 
+        routerLink="/" 
+        routerLinkActive="active" 
+        [routerLinkActiveOptions]="{exact: true}" 
+        (click)="sidenav.close()"
+        class="nav-item">
+        <mat-icon class="nav-icon" aria-hidden="true">home</mat-icon>
+        <span class="nav-label">Home</span>
+      </a>
+      <a 
+        mat-button 
+        routerLink="/gallery" 
+        routerLinkActive="active" 
+        (click)="sidenav.close()"
+        class="nav-item">
+        <mat-icon class="nav-icon" aria-hidden="true">photo_library</mat-icon>
+        <span class="nav-label">Gallery</span>
+      </a>
+      <a 
+        mat-button 
+        routerLink="/search" 
+        routerLinkActive="active" 
+        (click)="sidenav.close()"
+        class="nav-item">
+        <mat-icon class="nav-icon" aria-hidden="true">search</mat-icon>
+        <span class="nav-label">Search</span>
+      </a>
+      <a 
+        mat-button 
+        routerLink="/favorites" 
+        routerLinkActive="active" 
+        (click)="sidenav.close()"
+        class="nav-item">
+        <mat-icon class="nav-icon" aria-hidden="true">favorite</mat-icon>
+        <span class="nav-label">Favorites</span>
+      </a>
+    </nav>
+
+    <div class="sidenav-footer">
+      <span class="version">v1.0.0</span>
     </div>
   </mat-sidenav>
 
   <!-- Main Content & Toolbar -->
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="toolbar">
+    <mat-toolbar color="primary" class="toolbar" role="banner">
       
-      <!-- Hamburger Menu (Mobile Only) -->
-      <button mat-icon-button (click)="sidenav.toggle()" class="mobile-menu-btn">
-        <mat-icon>menu</mat-icon>
-      </button>
+      <!-- Left Section -->
+      <div class="toolbar-left">
+        <!-- Hamburger Menu (Mobile Only) -->
+        <button 
+          mat-icon-button 
+          (click)="sidenav.toggle()" 
+          class="mobile-menu-btn"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          [attr.aria-controls]="sidenav.opened ? 'sidenav' : null">
+          <mat-icon>menu</mat-icon>
+        </button>
 
-      <!-- Logo & Title -->
-      <button mat-icon-button routerLink="/" class="desktop-logo-btn">
-        <mat-icon>public</mat-icon>
-      </button>
-      <span class="title">{{ title }}</span>
+        <!-- Logo & Title -->
+        <a 
+          mat-icon-button 
+          routerLink="/" 
+          class="desktop-logo-btn"
+          aria-label="Go to home page">
+          <mat-icon>public</mat-icon>
+        </a>
+        <a routerLink="/" class="title-link">
+          <span class="title">{{ title }}</span>
+        </a>
+      </div>
       
-      <span class="spacer"></span>
+      <!-- Center Section (Desktop Navigation) -->
+      <nav class="desktop-nav" role="navigation" aria-label="Main navigation">
+        <a 
+          mat-button 
+          routerLink="/" 
+          routerLinkActive="active" 
+          [routerLinkActiveOptions]="{exact: true}"
+          class="nav-link">
+          <mat-icon class="nav-link-icon" aria-hidden="true">home</mat-icon>
+          <span class="nav-link-label">Home</span>
+        </a>
+        <a 
+          mat-button 
+          routerLink="/gallery" 
+          routerLinkActive="active"
+          class="nav-link">
+          <mat-icon class="nav-link-icon" aria-hidden="true">photo_library</mat-icon>
+          <span class="nav-link-label">Gallery</span>
+        </a>
+        <a 
+          mat-button 
+          routerLink="/search" 
+          routerLinkActive="active"
+          class="nav-link">
+          <mat-icon class="nav-link-icon" aria-hidden="true">search</mat-icon>
+          <span class="nav-link-label">Search</span>
+        </a>
+        <a 
+          mat-button 
+          routerLink="/favorites" 
+          routerLinkActive="active"
+          class="nav-link">
+          <mat-icon class="nav-link-icon" aria-hidden="true">favorite</mat-icon>
+          <span class="nav-link-label">Favorites</span>
+        </a>
+      </nav>
 
-      <!-- Desktop Navigation -->
-      <div class="desktop-nav">
-        <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          <mat-icon>home</mat-icon> Home
-        </button>
-        <button mat-button routerLink="/gallery" routerLinkActive="active">
-          <mat-icon>photo_library</mat-icon> Gallery
-        </button>
-        <button mat-button routerLink="/search" routerLinkActive="active">
-          <mat-icon>search</mat-icon> Search
-        </button>
-        <button mat-button routerLink="/favorites" routerLinkActive="active">
-          <mat-icon>favorite</mat-icon> Favorites
+      <!-- Right Section -->
+      <div class="toolbar-right">
+        <!-- Theme Toggle -->
+        <button 
+          mat-icon-button 
+          class="theme-toggle"
+          (click)="toggleTheme()"
+          [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+          [attr.aria-pressed]="isDarkMode"
+          title="Toggle theme">
+          <mat-icon class="theme-icon-light">light_mode</mat-icon>
+          <mat-icon class="theme-icon-dark">dark_mode</mat-icon>
         </button>
       </div>
     </mat-toolbar>
 
-    <main class="main-content">
+    <main id="main-content" class="main-content" role="main">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

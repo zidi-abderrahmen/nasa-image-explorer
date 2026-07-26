@@ -41,18 +41,19 @@ import { ApodSkeletonCard } from '../../shared/components/apod-skeleton-card/apo
   styleUrl: './search.scss',
 })
 export class Search {
-  selectedDate?: Date;
-  startDate?: Date;
-  endDate?: Date;
+  searchType: 'single' | 'range' = 'single';
+  selectedDate: Date | null = null;
+  startDate: Date | null = null;
+  endDate: Date | null = null;
   maxDate = new Date();
   minDate = new Date('1995-06-16');
-  
-  searchResults: Apod[] = [];
   loading = false;
-  error?: string;
-  searchType: 'single' | 'range' = 'single';
-  get skeletonCount(): number {
-    return this.searchType === 'single' ? 1 : 12;
+  error: string | null = null;
+  searchResults: any[] = [];
+  skeletonCount = 12;
+
+  get skeletonArray(): number[] {
+    return Array(this.skeletonCount).fill(0).map((_, i) => i);
   }
 
   constructor(
@@ -61,13 +62,11 @@ export class Search {
   ) {}
 
   searchByDate(): void {
-    if (!this.selectedDate) {
-      this.error = 'Please select a date';
-      return;
-    }
+    if (!this.selectedDate) return;
 
     this.loading = true;
-    this.error = undefined;
+    this.error = null;
+    
     this.searchResults = [];
     const dateStr = formatDateForApi(this.selectedDate);
 
@@ -85,10 +84,9 @@ export class Search {
   }
 
   searchByRange(): void {
-    if (!this.startDate || !this.endDate) {
-      this.error = 'Please select both start and end dates';
-      return;
-    }
+    if (!this.startDate || !this.endDate) return;
+    this.loading = true;
+    this.error = null;
 
     if (this.startDate > this.endDate) {
       this.error = 'Start date must be before end date';
@@ -101,8 +99,6 @@ export class Search {
       return;
     }
 
-    this.loading = true;
-    this.error = undefined;
     this.searchResults = [];
     const startStr = formatDateForApi(this.startDate);
     const endStr = formatDateForApi(this.endDate);
@@ -127,18 +123,25 @@ export class Search {
 
   clearSearch(): void {
     this.searchResults = [];
-    this.error = undefined;
-    this.selectedDate = undefined;
-    this.startDate = undefined;
-    this.endDate = undefined;
+    this.error = null;
+    this.selectedDate = null;
+    this.startDate = null;
+    this.endDate = null;
   }
 
-  toggleFavorite(apod: Apod, event: Event): void {
-    event.stopPropagation();
+  toggleFavorite(apod: Apod): void {
     this.favoritesService.toggleFavorite(apod);
   }
 
   isFavorite(date: string): boolean {
     return this.favoritesService.isFavorite(date);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  trackByDate(index: number, apod: any): string {
+    return apod.date;
   }
 }

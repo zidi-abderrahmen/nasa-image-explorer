@@ -1,65 +1,87 @@
-<div class="favorites-container">
+<main class="favorites-container" role="main" aria-label="My favorite astronomy pictures">
+  
   <!-- Header Section -->
-  <div class="header">
+  <header class="favorites-header">
     <div class="header-content">
-      <div>
-        <h1>
-          <mat-icon>favorite</mat-icon>
+      <div class="header-main">
+        <div class="header-badge">
+          <mat-icon aria-hidden="true">favorite</mat-icon>
+          <span>My Collection</span>
+        </div>
+        <h1 class="header-title">
+          <mat-icon class="title-icon" aria-hidden="true">favorite</mat-icon>
           My Favorites
         </h1>
-        <p class="subtitle">Your collection of favorite astronomical images</p>
+        <p class="header-subtitle">Your personal collection of favorite astronomical images from NASA</p>
       </div>
+      
       <button 
         mat-raised-button 
         color="warn" 
         class="modern-button clear-all-btn"
         (click)="clearAllFavorites()"
-        *ngIf="favorites.length > 0">
-        <mat-icon>delete_sweep</mat-icon>
+        *ngIf="favorites.length > 0"
+        type="button"
+        aria-label="Clear all favorites">
+        <mat-icon aria-hidden="true">delete_sweep</mat-icon>
         Clear All
       </button>
     </div>
-  </div>
+    
+    <div class="header-decoration" aria-hidden="true">
+      <div class="deco-orb orb-1"></div>
+      <div class="deco-orb orb-2"></div>
+    </div>
+  </header>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="favorites.length === 0">
-    <div class="empty-icon-wrapper">
-      <mat-icon>favorite_border</mat-icon>
+  <section class="state-container empty-state" *ngIf="favorites.length === 0" aria-label="No favorites saved">
+    <div class="state-icon-wrapper empty-icon-wrapper">
+      <mat-icon class="state-icon" aria-hidden="true">favorite_border</mat-icon>
     </div>
-    <h2>No favorites yet</h2>
-    <p>Start exploring and add your favorite astronomical images!</p>
+    <h2 class="state-title">No Favorites Yet</h2>
+    <p class="state-message">Start exploring the cosmos and save your favorite astronomical images!</p>
     <div class="quick-links">
-      <button mat-raised-button color="primary" class="modern-button" routerLink="/">
-        <mat-icon>home</mat-icon>
+      <a 
+        mat-raised-button 
+        color="primary" 
+        class="modern-button action-btn"
+        routerLink="/"
+        aria-label="Go to home page">
+        <mat-icon aria-hidden="true">home</mat-icon>
         Go to Home
-      </button>
-      <button mat-raised-button color="accent" class="modern-button" routerLink="/gallery">
-        <mat-icon>photo_library</mat-icon>
+      </a>
+      <a 
+        mat-raised-button 
+        color="accent" 
+        class="modern-button action-btn"
+        routerLink="/gallery"
+        aria-label="Browse the gallery">
+        <mat-icon aria-hidden="true">photo_library</mat-icon>
         Browse Gallery
-      </button>
+      </a>
     </div>
-  </div>
+  </section>
 
   <!-- Favorites Grid -->
-  <div class="favorites-grid" *ngIf="favorites.length > 0">
-    <app-apod-card 
-      *ngFor="let apod of favorites" 
-      [apod]="apod"
-      mode="favorite"
-      [descriptionLength]="150"
-      (remove)="removeFavorite(apod.date, $event)">
-    </app-apod-card>
-  </div>
+  <section class="favorites-section" *ngIf="favorites.length > 0" aria-label="Favorite images">
+    <div class="favorites-grid">
+      <app-apod-card 
+        *ngFor="let apod of favorites; trackBy: trackByDate" 
+        [apod]="apod"
+        mode="favorite"
+        [descriptionLength]="150"
+        (remove)="removeFavorite(apod.date)"
+        role="listitem">
+      </app-apod-card>
+    </div>
+  </section>
 
   <!-- Count Indicator -->
-  <div class="favorites-count" *ngIf="favorites.length > 0">
-    <mat-chip-set class="modern-chips">
-      <mat-chip class="favorite-count-chip">
-        <div class="chip-content">
-          <mat-icon>favorite</mat-icon>
-          <span>{{ favorites.length }} {{ favorites.length === 1 ? 'Favorite' : 'Favorites' }}</span>
-        </div>
-      </mat-chip>
-    </mat-chip-set>
-  </div>
-</div>
+  <footer class="favorites-footer" *ngIf="favorites.length > 0">
+    <div class="count-badge">
+      <mat-icon aria-hidden="true">favorite</mat-icon>
+      <span>{{ favorites.length }} {{ favorites.length === 1 ? 'Favorite' : 'Favorites' }}</span>
+    </div>
+  </footer>
+</main>

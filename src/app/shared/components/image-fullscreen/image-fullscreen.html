@@ -1,0 +1,110 @@
+<div 
+  class="fullscreen-backdrop"
+  #containerRef
+  (click)="onBackdropClick($event)"
+  (wheel)="onWheel($event)"
+  (mousemove)="onContainerMouseMove()"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image fullscreen viewer">
+
+  <!-- Loading State -->
+  <div class="loading-overlay" *ngIf="isLoading" role="status" aria-label="Loading image">
+    <mat-spinner diameter="48" strokeWidth="3"></mat-spinner>
+    <span class="loading-text">Loading image...</span>
+  </div>
+
+  <!-- Top Bar: Info & Close -->
+  <div class="top-bar" [class.visible]="showControls || isLoading">
+    <div class="image-info" *ngIf="data.title || data.date">
+      <h2 class="image-title" *ngIf="data.title">{{ data.title }}</h2>
+      <span class="image-date" *ngIf="data.date">
+        <mat-icon aria-hidden="true">event</mat-icon>
+        {{ data.date | date:'mediumDate' }}
+      </span>
+    </div>
+    
+    <div class="top-actions">
+      <span class="zoom-level" *ngIf="scale > 1">{{ zoomPercentage }}</span>
+      
+      <button 
+        mat-icon-button 
+        class="control-btn zoom-in-btn"
+        (click)="zoomIn()"
+        [disabled]="!canZoomIn"
+        aria-label="Zoom in"
+        title="Zoom in (+)">
+        <mat-icon>add</mat-icon>
+      </button>
+      
+      <button 
+        mat-icon-button 
+        class="control-btn zoom-out-btn"
+        (click)="zoomOut()"
+        [disabled]="!canZoomOut"
+        aria-label="Zoom out"
+        title="Zoom out (-)">
+        <mat-icon>remove</mat-icon>
+      </button>
+      
+      <button 
+        mat-icon-button 
+        class="control-btn reset-btn"
+        *ngIf="scale > 1"
+        (click)="resetZoom()"
+        aria-label="Reset zoom"
+        title="Reset zoom (Ctrl+0)">
+        <mat-icon>zoom_out_map</mat-icon>
+      </button>
+      
+      <div class="divider" *ngIf="scale > 1"></div>
+      
+      <button 
+        mat-icon-button 
+        class="control-btn close-btn"
+        (click)="close()"
+        aria-label="Close fullscreen view"
+        title="Close (Esc)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Hint -->
+  <div class="bottom-hint" [class.visible]="showControls && scale === 1 && !isLoading">
+    <mat-icon aria-hidden="true">mouse</mat-icon>
+    <span>Scroll to zoom · Drag to pan · Esc to close</span>
+  </div>
+
+  <!-- Image Container -->
+  <div 
+    class="image-stage"
+    [class.is-dragging]="isDragging"
+    (mousedown)="onMouseDown($event)"
+    (mousemove)="onMouseMove($event)"
+    (mouseup)="onMouseUp()"
+    (mouseleave)="onMouseLeave()"
+    (touchstart)="onTouchStart($event)"
+    (touchmove)="onTouchMove($event)"
+    (touchend)="onTouchEnd()">
+    
+    <img 
+      #imageRef
+      [src]="data.imageUrl" 
+      [alt]="data.alt || data.title || 'Fullscreen image'"
+      class="fullscreen-image"
+      [class.loaded]="!isLoading"
+      [style.transform]="'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + scale + ')'"
+      [style.cursor]="scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in'"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+      draggable="false">
+  </div>
+
+  <!-- Error State -->
+  <div class="error-overlay" *ngIf="!isLoading && !imageRef?.naturalWidth">
+    <mat-icon class="error-icon">broken_image</mat-icon>
+    <p>Failed to load image</p>
+    <button mat-raised-button color="primary" (click)="close()">Close</button>
+  </div>
+</div>

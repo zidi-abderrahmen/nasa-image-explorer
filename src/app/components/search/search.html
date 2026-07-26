@@ -1,148 +1,204 @@
-<div class="search-container">
+<main class="search-container" role="main" aria-label="Search NASA astronomy pictures">
+  
   <!-- Header Section -->
-  <div class="header">
-    <h1>Search NASA APOD</h1>
-    <p class="subtitle">Find astronomical images by date or date range</p>
-  </div>
-
-  <!-- Search Card Control -->
-  <mat-card class="search-card modern-card">
-    <mat-card-content class="search-card-content">
-      <!-- Type Toggle -->
-      <div class="search-type-toggle">
-        <button 
-          mat-raised-button 
-          class="modern-button toggle-btn"
-          [color]="searchType === 'single' ? 'primary' : ''"
-          (click)="setSearchType('single')">
-          <mat-icon>event</mat-icon>
-          Single Date
-        </button>
-        <button 
-          mat-raised-button 
-          class="modern-button toggle-btn"
-          [color]="searchType === 'range' ? 'primary' : ''"
-          (click)="setSearchType('range')">
-          <mat-icon>date_range</mat-icon>
-          Date Range
-        </button>
+  <header class="search-header">
+    <div class="header-content">
+      <div class="header-badge">
+        <mat-icon aria-hidden="true">search</mat-icon>
+        <span>Search Archive</span>
       </div>
+      <h1 class="header-title">Search NASA APOD</h1>
+      <p class="header-subtitle">
+        Find astronomical images by specific date or explore a date range from NASA's archive.
+      </p>
+    </div>
+    
+    <div class="header-decoration" aria-hidden="true">
+      <div class="deco-orb orb-1"></div>
+      <div class="deco-orb orb-2"></div>
+    </div>
+  </header>
 
-      <!-- Single Date Form -->
-      <div *ngIf="searchType === 'single'" class="search-form">
-        <mat-form-field appearance="outline" class="full-width modern-input">
-          <mat-label>Select a date</mat-label>
-          <input 
-            matInput 
-            [matDatepicker]="picker" 
-            [(ngModel)]="selectedDate"
-            [max]="maxDate"
-            [min]="minDate"
-            placeholder="Choose a date">
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-hint>Available from June 16, 1995 to today</mat-hint>
-        </mat-form-field>
-
-        <button 
-          mat-raised-button 
-          color="primary" 
-          class="modern-button search-button"
-          (click)="searchByDate()"
-          [disabled]="!selectedDate || loading">
-          <mat-icon>search</mat-icon>
-          Search
-        </button>
-      </div>
-
-      <!-- Date Range Form -->
-      <div *ngIf="searchType === 'range'" class="search-form">
-        <div class="date-range-fields">
-          <mat-form-field appearance="outline" class="modern-input">
-            <mat-label>Start date</mat-label>
-            <input 
-              matInput 
-              [matDatepicker]="startPicker" 
-              [(ngModel)]="startDate"
-              [max]="maxDate"
-              [min]="minDate"
-              placeholder="Start date">
-            <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="modern-input">
-            <mat-label>End date</mat-label>
-            <input 
-              matInput 
-              [matDatepicker]="endPicker" 
-              [(ngModel)]="endDate"
-              [max]="maxDate"
-              [min]="minDate"
-              placeholder="End date">
-            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-          </mat-form-field>
+  <!-- Search Card -->
+  <section class="search-card-wrapper" aria-label="Search controls">
+    <mat-card class="search-card modern-card">
+      <mat-card-content class="search-card-content">
+        
+        <!-- Type Toggle (Segmented Control) -->
+        <div class="search-type-toggle" role="group" aria-label="Search type selection">
+          <button 
+            mat-button 
+            class="toggle-btn"
+            [class.active]="searchType === 'single'"
+            (click)="setSearchType('single')"
+            aria-pressed="searchType === 'single'"
+            type="button">
+            <mat-icon aria-hidden="true">event</mat-icon>
+            Single Date
+          </button>
+          <button 
+            mat-button 
+            class="toggle-btn"
+            [class.active]="searchType === 'range'"
+            (click)="setSearchType('range')"
+            aria-pressed="searchType === 'range'"
+            type="button">
+            <mat-icon aria-hidden="true">date_range</mat-icon>
+            Date Range
+          </button>
         </div>
 
-        <mat-hint class="range-hint">Maximum 100 days range. Available from June 16, 1995 to today</mat-hint>
+        <!-- Single Date Form -->
+        <form *ngIf="searchType === 'single'" class="search-form" (ngSubmit)="searchByDate()">
+          <mat-form-field appearance="outline" class="search-input">
+            <mat-label>Select a date</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="picker" 
+              [(ngModel)]="selectedDate"
+              [max]="maxDate"
+              [min]="minDate"
+              name="singleDate"
+              placeholder="Choose a date"
+              aria-describedby="single-date-hint">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-hint id="single-date-hint">Available from June 16, 1995 to today</mat-hint>
+          </mat-form-field>
 
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="modern-button search-button"
+            type="submit"
+            [disabled]="!selectedDate || loading">
+            <mat-icon *ngIf="!loading" aria-hidden="true">search</mat-icon>
+            <mat-spinner *ngIf="loading && searchResults.length === 0" diameter="20" strokeWidth="3"></mat-spinner>
+            {{ loading && searchResults.length === 0 ? 'Searching...' : 'Search' }}
+          </button>
+        </form>
+
+        <!-- Date Range Form -->
+        <form *ngIf="searchType === 'range'" class="search-form" (ngSubmit)="searchByRange()">
+          <div class="date-range-fields">
+            <mat-form-field appearance="outline" class="search-input">
+              <mat-label>Start date</mat-label>
+              <input 
+                matInput 
+                [matDatepicker]="startPicker" 
+                [(ngModel)]="startDate"
+                [max]="maxDate"
+                [min]="minDate"
+                name="startDate"
+                placeholder="Start date"
+                aria-describedby="range-hint">
+              <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="search-input">
+              <mat-label>End date</mat-label>
+              <input 
+                matInput 
+                [matDatepicker]="endPicker" 
+                [(ngModel)]="endDate"
+                [max]="maxDate"
+                [min]="minDate"
+                name="endDate"
+                placeholder="End date"
+                aria-describedby="range-hint">
+              <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <p id="range-hint" class="range-hint">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            Maximum 100 days range. Available from June 16, 1995 to today.
+          </p>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="modern-button search-button"
+            type="submit"
+            [disabled]="!startDate || !endDate || loading">
+            <mat-icon *ngIf="!loading" aria-hidden="true">search</mat-icon>
+            <mat-spinner *ngIf="loading && searchResults.length === 0" diameter="20" strokeWidth="3"></mat-spinner>
+            {{ loading && searchResults.length === 0 ? 'Searching...' : 'Search Range' }}
+          </button>
+        </form>
+
+        <!-- Clear Results -->
         <button 
-          mat-raised-button 
-          color="primary" 
-          class="modern-button search-button"
-          (click)="searchByRange()"
-          [disabled]="!startDate || !endDate || loading">
-          <mat-icon>search</mat-icon>
-          Search Range
+          mat-stroked-button 
+          class="clear-button"
+          (click)="clearSearch()"
+          *ngIf="searchResults.length > 0"
+          type="button"
+          aria-label="Clear search results">
+          <mat-icon aria-hidden="true">clear</mat-icon>
+          Clear Results
         </button>
-      </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
 
-      <!-- Clear Results Action -->
-      <button 
-        mat-button 
-        (click)="clearSearch()"
-        *ngIf="searchResults.length > 0"
-        class="clear-button">
-        <mat-icon>clear</mat-icon>
-        Clear Results
-      </button>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- 🆕 Skeleton Loading Grid -->
-  <div class="results-section" *ngIf="loading">
+  <!-- Skeleton Loading -->
+  <section class="results-section skeleton-section" *ngIf="loading && searchResults.length === 0" aria-busy="true" aria-label="Loading search results">
     <div class="results-grid">
-      <app-apod-skeleton-card *ngFor="let _ of [].constructor(skeletonCount)"></app-apod-skeleton-card>
+      <app-apod-skeleton-card *ngFor="let _ of skeletonArray; trackBy: trackByIndex"></app-apod-skeleton-card>
     </div>
-  </div>
+  </section>
 
   <!-- Error State -->
-  <div *ngIf="error" class="error-container">
-    <mat-icon class="status-icon">error_outline</mat-icon>
-    <p>{{ error }}</p>
-  </div>
+  <section class="state-container error-state" *ngIf="error && !loading" role="alert" aria-live="assertive">
+    <div class="state-icon-wrapper">
+      <mat-icon class="state-icon" aria-hidden="true">error_outline</mat-icon>
+    </div>
+    <h2 class="state-title">Search Failed</h2>
+    <p class="state-message">{{ error }}</p>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="modern-button action-btn"
+      (click)="clearSearch()"
+      type="button">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
+      Try Again
+    </button>
+  </section>
 
-  <!-- Search Results Section -->
-  <div class="results-section" *ngIf="searchResults.length > 0 && !loading">
-    <h2>Search Results ({{ searchResults.length }})</h2>
+  <!-- Search Results -->
+  <section class="results-section" *ngIf="searchResults.length > 0 && !loading" aria-label="Search results">
+    <header class="results-header">
+      <h2 class="results-title">Search Results</h2>
+      <span class="results-count">{{ searchResults.length }} image{{ searchResults.length > 1 ? 's' : '' }} found</span>
+    </header>
     
     <div class="results-grid">
       <app-apod-card 
-        *ngFor="let apod of searchResults" 
+        *ngFor="let apod of searchResults; trackBy: trackByDate" 
         [apod]="apod"
         [isFavorite]="isFavorite(apod.date)"
-        (toggleFavorite)="toggleFavorite(apod, $event)">
+        (toggleFavorite)="toggleFavorite(apod)"
+        role="listitem">
       </app-apod-card>
     </div>
+  </section>
+
+  <!-- Inline Loading (Pagination) -->
+  <div class="inline-loading" *ngIf="loading && searchResults.length > 0" role="status" aria-label="Loading more results">
+    <mat-spinner diameter="32" strokeWidth="3"></mat-spinner>
+    <span>Searching...</span>
   </div>
 
   <!-- Empty State -->
-  <div class="empty-state" *ngIf="searchResults.length === 0 && !loading && !error">
-    <div class="empty-icon-wrapper">
-      <mat-icon>search</mat-icon>
+  <section class="state-container empty-state" *ngIf="searchResults.length === 0 && !loading && !error" aria-label="No search results">
+    <div class="state-icon-wrapper empty-icon-wrapper">
+      <mat-icon class="state-icon" aria-hidden="true">search</mat-icon>
     </div>
-    <h3>No searches yet</h3>
-    <p>Select a date or date range above to start searching</p>
-  </div>
-</div>
+    <h2 class="state-title">No Searches Yet</h2>
+    <p class="state-message">Select a date or date range above to start exploring NASA's astronomy archive.</p>
+  </section>
+</main>

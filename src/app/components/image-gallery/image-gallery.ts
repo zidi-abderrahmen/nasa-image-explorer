@@ -38,6 +38,10 @@ export class ImageGallery {
     private galleryState: GalleryState
   ) {}
 
+  get skeletonArray(): number[] {
+    return Array(this.skeletonCount).fill(0).map((_, i) => i);
+  }
+
   ngOnInit(): void {
     this.galleryState.apods$.subscribe(apods => {
       this.apods = apods;
@@ -80,12 +84,19 @@ export class ImageGallery {
     });
   }
 
-  toggleFavorite(apod: Apod, event: Event): void {
-    event.stopPropagation();
+  toggleFavorite(apod: Apod): void {
     this.favoritesService.toggleFavorite(apod);
   }
 
   isFavorite(date: string): boolean {
     return this.favoritesService.isFavorite(date);
+  }
+
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  trackByDate(index: number, apod: any): string {
+    return apod.date;
   }
 }

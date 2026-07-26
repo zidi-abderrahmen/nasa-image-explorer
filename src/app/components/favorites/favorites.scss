@@ -1,200 +1,402 @@
+/* ============================================================
+   Favorites Component - Production Ready
+   ============================================================ */
+
+// 1. CONTAINER
+// ----------------------------------------------------------------
 .favorites-container {
-  max-width: 1400px;
+  width: 100%;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 2rem;
-  min-height: calc(100vh - 128px);
+  padding: var(--space-5);
+  min-height: calc(100vh - var(--header-height));
+  position: relative;
+  z-index: 1;
 }
 
-.header {
-  margin-bottom: 3.5rem;
-  padding-top: 1rem;
+// 2. HEADER
+// ----------------------------------------------------------------
+.favorites-header {
+  position: relative;
+  margin-bottom: var(--space-8);
+  padding: var(--space-7) var(--space-6);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(
+    135deg,
+    var(--surface-card) 0%,
+    var(--surface-elevated) 50%,
+    var(--surface-card) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out;
 
   .header-content {
+    position: relative;
+    z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+  }
 
-    h1 {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 2.75rem;
-      font-weight: 800;
-      color: #3f51b5; /* Synced with primary brand color */
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.5px;
+  .header-main {
+    flex: 1;
+    min-width: 0;
+  }
 
-      mat-icon {
-        color: #e91e63;
-        font-size: 2.75rem;
-        width: 2.75rem;
-        height: 2.75rem;
-      }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-1) var(--space-4);
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-4);
+    box-shadow: 0 0 20px rgba(233, 30, 99, 0.3);
+
+    mat-icon {
+      font-size: var(--text-base);
+      width: var(--text-base);
+      height: var(--text-base);
+    }
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
+
+    .title-icon {
+      color: #e91e63;
+      font-size: clamp(2rem, 5vw, 3rem);
+      width: clamp(2rem, 5vw, 3rem);
+      height: clamp(2rem, 5vw, 3rem);
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+  }
+
+  .header-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: var(--line-height-relaxed);
+  }
+
+  .clear-all-btn {
+    flex-shrink: 0;
+    height: 48px;
+    padding: 0 var(--space-5) !important;
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-fast);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3);
+    }
+  }
+
+  // Decorative orbs
+  .header-decoration {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .deco-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.08;
+
+    &.orb-1 {
+      width: 200px;
+      height: 200px;
+      background: #e91e63;
+      top: -50px;
+      right: -30px;
+      animation: float 8s ease-in-out infinite;
     }
 
-    .subtitle {
-      color: #555;
-      font-size: 1.25rem;
-      margin: 0;
-    }
-
-    button mat-icon {
-      margin-right: 0.5rem;
+    &.orb-2 {
+      width: 150px;
+      height: 150px;
+      background: var(--nasa-accent);
+      bottom: -30px;
+      left: -20px;
+      animation: float 6s ease-in-out infinite reverse;
     }
   }
 }
 
-/* Shared Pill-Shape Button */
-.modern-button {
-  border-radius: 24px !important;
-  padding: 0 1.5rem !important;
-  letter-spacing: 0.5px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-  &:not(:disabled):hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  }
-
-  mat-icon {
-    margin-right: 0.5rem;
-  }
-}
-
-/* Empty State Styling */
+// 3. EMPTY STATE
+// ----------------------------------------------------------------
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6rem 2rem;
+  padding: var(--space-9) var(--space-5);
   text-align: center;
+  animation: fadeIn 0.4s ease-out;
 
   .empty-icon-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, rgba(233, 30, 99, 0.05), rgba(233, 30, 99, 0.15));
-    border-radius: 50%;
-    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(233, 30, 99, 0.1) 0%, rgba(233, 30, 99, 0.05) 100%);
     box-shadow: 0 4px 20px rgba(233, 30, 99, 0.1);
 
-    mat-icon {
-      font-size: 48px;
-      width: 48px;
-      height: 48px;
+    .state-icon {
       color: #e91e63;
     }
   }
 
-  h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #222;
-    margin-bottom: 0.75rem;
+  .state-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
   }
 
-  p {
-    font-size: 1.1rem;
-    color: #666;
-    margin-bottom: 2rem;
+  .state-message {
+    font-size: var(--text-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-6);
+    max-width: 500px;
+    line-height: var(--line-height-relaxed);
   }
 
   .quick-links {
     display: flex;
-    gap: 1rem;
+    gap: var(--space-3);
     flex-wrap: wrap;
     justify-content: center;
+
+    .action-btn {
+      min-width: 160px;
+      height: 48px;
+    }
   }
 }
 
-/* Favorites Grid Styling */
+// 4. FAVORITES GRID
+// ----------------------------------------------------------------
+.favorites-section {
+  animation: fadeInUp 0.5s ease-out;
+}
+
 .favorites-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+  list-style: none;
+  padding: 0;
 }
 
-/* Counter Chip Styling */
-.favorites-count {
+// 5. FOOTER / COUNT BADGE
+// ----------------------------------------------------------------
+.favorites-footer {
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
-}
+  padding: var(--space-4) 0 var(--space-8);
+  animation: fadeInUp 0.4s ease-out 0.2s both;
 
-.favorites-count {
-  display: flex;
-  justify-content: center;
-  padding: 2rem 0;
-}
-
-.favorite-count-chip {
-  height: auto !important;
-  padding: 0.75rem 1.5rem !important;
-  font-size: 1rem;
-  font-weight: 600;
-  background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%) !important;
-  color: white !important;
-  border-radius: 10px !important;
-  box-shadow: 0 4px 12px rgba(233, 30, 99, 0.25);
-
-  .chip-content {
-    display: flex;
+  .count-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-5);
+    background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    box-shadow: 0 4px 16px rgba(233, 30, 99, 0.25);
+    letter-spacing: 0.025em;
+
+    mat-icon {
+      font-size: var(--text-lg);
+      width: var(--text-lg);
+      height: var(--text-lg);
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+  }
+}
+
+// 6. MODERN BUTTON UTILITY
+// ----------------------------------------------------------------
+.modern-button {
+  border-radius: var(--radius-full) !important;
+  letter-spacing: 0.025em;
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+
+  &:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0);
   }
 
   mat-icon {
-    font-size: 1.25rem;
-    width: auto;
-    height: auto;
-    line-height: 1;
-    color: white;
-  }
-
-  span {
-    line-height: 1;
-    color: white !important;
-    font-weight: 600;
+    margin-right: var(--space-2);
   }
 }
 
-/* Responsive Rules */
-@media (max-width: 768px) {
-  .favorites-container {
-    padding: 1rem;
+// 7. STATE UTILITIES (shared with empty state)
+// ----------------------------------------------------------------
+.state-container {
+  .state-icon-wrapper {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--space-5);
   }
 
-  .header {
-    margin-bottom: 2rem;
+  .state-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// 8. RESPONSIVE
+// ----------------------------------------------------------------
+@media (max-width: 768px) {
+  .favorites-container {
+    padding: var(--space-3);
+  }
+
+  .favorites-header {
+    padding: var(--space-6) var(--space-4);
+    margin-bottom: var(--space-6);
 
     .header-content {
       flex-direction: column;
       align-items: flex-start;
-      gap: 1.5rem;
+      gap: var(--space-4);
+    }
 
-      h1 {
+    .header-title {
+      font-size: 2rem;
+
+      .title-icon {
         font-size: 2rem;
-
-        mat-icon {
-          font-size: 2rem;
-          width: 2rem;
-          height: 2rem;
-        }
+        width: 2rem;
+        height: 2rem;
       }
+    }
 
-      .clear-all-btn {
-        width: 100%;
-      }
+    .clear-all-btn {
+      width: 100%;
+      justify-content: center;
     }
   }
 
   .favorites-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--space-4);
   }
+
+  .empty-state {
+    padding: var(--space-7) var(--space-4);
+
+    .quick-links {
+      flex-direction: column;
+      width: 100%;
+
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-container {
+    padding: var(--space-2);
+  }
+
+  .favorites-header {
+    padding: var(--space-5) var(--space-3);
+  }
+}
+
+// 9. REDUCED MOTION
+// ----------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .favorites-header,
+  .favorites-section,
+  .empty-state,
+  .favorites-footer,
+  .deco-orb,
+  .title-icon {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// 10. PRINT
+// ----------------------------------------------------------------
+@media print {
+  .favorites-header,
+  .favorites-footer,
+  .clear-all-btn {
+    display: none !important;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+// 11. KEYFRAMES
+// ----------------------------------------------------------------
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.15); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.15); }
+  60% { transform: scale(1); }
 }

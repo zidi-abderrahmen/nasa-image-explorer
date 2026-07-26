@@ -1,76 +1,677 @@
-/* src/styles.scss */
+/* ============================================================
+   NASA Image Explorer - Production Ready Design System
+   ============================================================ */
 
-// IMPORTANT: All @use statements must be at the top of the file
+// 1. ANGULAR MATERIAL THEME SETUP
+// ----------------------------------------------------------------
 @use '@angular/material' as mat;
+@use 'sass:map';
 
-// Apply Material 3 theme to the root html element
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$violet-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+// Include Material core styles
+@include mat.core();
+
+// Define custom color palettes for NASA/Space theme
+$space-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 600, 400, 800);
+$space-accent: mat.m2-define-palette(mat.$m2-deep-purple-palette, A200, A100, A700);
+$space-warn: mat.m2-define-palette(mat.$m2-red-palette, 500);
+
+$space-light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $space-primary,
+    accent: $space-accent,
+    warn: $space-warn,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+  ),
+  density: 0,
+));
+
+$space-dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: mat.m2-define-palette(mat.$m2-blue-palette, 400, 300, 600),
+    accent: mat.m2-define-palette(mat.$m2-purple-palette, A200, A100, A700),
+    warn: $space-warn,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: 'Roboto, "Helvetica Neue", sans-serif',
+  ),
+  density: 0,
+));
+
+// Apply light theme by default
+@include mat.all-component-themes($space-light-theme);
+
+// Dark theme class
+.dark-theme {
+  @include mat.all-component-colors($space-dark-theme);
 }
 
-// Global reset and base styles
-* {
+// 2. CSS CUSTOM PROPERTIES (Design Tokens)
+// ----------------------------------------------------------------
+:root {
+  // Color Palette - Light Mode
+  --nasa-primary: #1976d2;
+  --nasa-primary-light: #63a4ff;
+  --nasa-primary-dark: #004ba0;
+  --nasa-accent: #7c4dff;
+  --nasa-accent-light: #b47cff;
+  --nasa-accent-dark: #3f1dcb;
+  
+  // Semantic Colors
+  --surface-bg: #f5f5f5;
+  --surface-card: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-overlay: rgba(255, 255, 255, 0.95);
+  
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-disabled: rgba(0, 0, 0, 0.38);
+  --text-inverse: #ffffff;
+  --text-on-primary: #ffffff;
+  --text-on-accent: #ffffff;
+  
+  --border-subtle: rgba(0, 0, 0, 0.12);
+  --border-focus: var(--nasa-primary);
+  
+  // Status Colors
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #f44336;
+  --info: #2196f3;
+  
+  // Spacing Scale (8px base)
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  
+  // Typography Scale
+  --text-xs: 0.75rem;    // 12px
+  --text-sm: 0.875rem;   // 14px
+  --text-base: 1rem;     // 16px
+  --text-lg: 1.125rem;   // 18px
+  --text-xl: 1.25rem;    // 20px
+  --text-2xl: 1.5rem;    // 24px
+  --text-3xl: 1.875rem;  // 30px
+  --text-4xl: 2.25rem;   // 36px
+  
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  // Elevation (Shadows)
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(25, 118, 210, 0.3);
+  
+  // Border Radius
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  // Transitions
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 500ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  // Z-Index Scale
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-popover: 500;
+  --z-tooltip: 600;
+  --z-toast: 700;
+  
+  // Layout
+  --header-height: 64px;
+  --container-max: 1400px;
+  --content-padding: var(--space-5);
+  
+  // Scrollbar
+  --scrollbar-width: 10px;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-thumb-hover: #a8a8a8;
+
+  // Skeleton Loader Colors
+  --skeleton-base: #f0f0f0;
+  --skeleton-shine: #e0e0e0;
+}
+
+// 3. DARK MODE
+// ----------------------------------------------------------------
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --nasa-primary: #90caf9;
+    --nasa-primary-light: #c3fdff;
+    --nasa-primary-dark: #5d99c6;
+    --nasa-accent: #b388ff;
+    --nasa-accent-light: #e7b9ff;
+    --nasa-accent-dark: #805acb;
+    
+    --surface-bg: #0a0e17;
+    --surface-card: #1a1f2e;
+    --surface-elevated: #242b3d;
+    --surface-overlay: rgba(10, 14, 23, 0.95);
+    
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-disabled: rgba(255, 255, 255, 0.4);
+    --text-inverse: #000000;
+    --text-on-primary: #ffffff;
+    --text-on-accent: #ffffff;
+    
+    --border-subtle: rgba(255, 255, 255, 0.12);
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 20px rgba(144, 202, 249, 0.2);
+    
+    --scrollbar-track: #1a1f2e;
+    --scrollbar-thumb: #4a5568;
+    --scrollbar-thumb-hover: #718096;
+
+    --skeleton-base: #242b3d;
+    --skeleton-shine: #2f374a;
+    
+    color-scheme: dark;
+  }
+}
+
+// Manual dark mode override
+[data-theme="dark"] {
+  --nasa-primary: #90caf9;
+  --nasa-primary-light: #c3fdff;
+  --nasa-primary-dark: #5d99c6;
+  --nasa-accent: #b388ff;
+  
+  --surface-bg: #0a0e17;
+  --surface-card: #1a1f2e;
+  --surface-elevated: #242b3d;
+  --surface-overlay: rgba(10, 14, 23, 0.95);
+  
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-disabled: rgba(255, 255, 255, 0.4);
+  --text-inverse: #000000;
+  --text-on-primary: #ffffff;
+  --text-on-accent: #ffffff;
+  
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(144, 202, 249, 0.2);
+  
+  --scrollbar-track: #1a1f2e;
+  --scrollbar-thumb: #4a5568;
+  --scrollbar-thumb-hover: #718096;
+
+  --skeleton-base: #242b3d;
+  --skeleton-shine: #2f374a;
+  
+  color-scheme: dark;
+}
+
+// 4. GLOBAL RESET & BASE STYLES
+// ----------------------------------------------------------------
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
+html {
   height: 100%;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
 }
 
 body {
-  margin: 0;
+  min-height: 100%;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: #f5f5f5;
-  color-scheme: light;
+  font-size: var(--text-base);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  background-color: var(--surface-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-// Custom scrollbar
+// 5. SCROLLBAR STYLES (Cross-browser)
+// ----------------------------------------------------------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
 ::-webkit-scrollbar {
-  width: 10px;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--scrollbar-track);
+  border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--scrollbar-track);
+  transition: background var(--transition-fast);
+  
   &:hover {
-    background: #555;
+    background: var(--scrollbar-thumb-hover);
+  }
+  
+  &:active {
+    background: var(--nasa-primary);
   }
 }
 
-// Utility classes
-.full-width {
+// 6. ACCESSIBILITY
+// ----------------------------------------------------------------
+// Focus styles
+:focus-visible {
+  outline: 2px solid var(--nasa-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+// Skip link for keyboard navigation
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--nasa-primary);
+  color: var(--text-inverse);
+  padding: var(--space-2) var(--space-4);
+  z-index: var(--z-tooltip);
+  transition: top var(--transition-fast);
+  
+  &:focus {
+    top: 0;
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  :root {
+    --border-subtle: rgba(0, 0, 0, 0.5);
+    --text-secondary: rgba(0, 0, 0, 0.8);
+  }
+  
+  .dark-theme,
+  [data-theme="dark"] {
+    --border-subtle: rgba(255, 255, 255, 0.5);
+    --text-secondary: rgba(255, 255, 255, 0.8);
+  }
+}
+
+// Screen reader only
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// 7. TYPOGRAPHY UTILITIES
+// ----------------------------------------------------------------
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+.text-3xl { font-size: var(--text-3xl); }
+.text-4xl { font-size: var(--text-4xl); }
+
+.font-light { font-weight: var(--font-weight-light); }
+.font-regular { font-weight: var(--font-weight-regular); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+.leading-tight { line-height: var(--line-height-tight); }
+.leading-normal { line-height: var(--line-height-normal); }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+
+// 8. SPACING UTILITIES
+// ----------------------------------------------------------------
+@each $size in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9) {
+  .m-#{$size} { margin: var(--space-#{$size}); }
+  .mt-#{$size} { margin-top: var(--space-#{$size}); }
+  .mb-#{$size} { margin-bottom: var(--space-#{$size}); }
+  .ml-#{$size} { margin-left: var(--space-#{$size}); }
+  .mr-#{$size} { margin-right: var(--space-#{$size}); }
+  .mx-#{$size} { 
+    margin-left: var(--space-#{$size}); 
+    margin-right: var(--space-#{$size}); 
+  }
+  .my-#{$size} { 
+    margin-top: var(--space-#{$size}); 
+    margin-bottom: var(--space-#{$size}); 
+  }
+  
+  .p-#{$size} { padding: var(--space-#{$size}); }
+  .pt-#{$size} { padding-top: var(--space-#{$size}); }
+  .pb-#{$size} { padding-bottom: var(--space-#{$size}); }
+  .pl-#{$size} { padding-left: var(--space-#{$size}); }
+  .pr-#{$size} { padding-right: var(--space-#{$size}); }
+  .px-#{$size} { 
+    padding-left: var(--space-#{$size}); 
+    padding-right: var(--space-#{$size}); 
+  }
+  .py-#{$size} { 
+    padding-top: var(--space-#{$size}); 
+    padding-bottom: var(--space-#{$size}); 
+  }
+}
+
+// 9. LAYOUT UTILITIES
+// ----------------------------------------------------------------
+.container {
   width: 100%;
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-padding);
+  padding-right: var(--content-padding);
 }
 
-.text-center {
-  text-align: center;
+.full-width { width: 100%; }
+.max-width { max-width: var(--container-max); }
+
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1 1 0%; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-// Material component overrides
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+// 10. VISUAL UTILITIES
+// ----------------------------------------------------------------
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-full { border-radius: var(--radius-full); }
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+// 11. MATERIAL COMPONENT OVERRIDES
+// ----------------------------------------------------------------
 .mat-mdc-card {
-  border-radius: 12px !important;
+  border-radius: var(--radius-lg) !important;
+  background-color: var(--surface-card) !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  
+  &:hover {
+    box-shadow: var(--shadow-lg) !important;
+  }
 }
 
 .mat-mdc-button,
-.mat-mdc-raised-button {
-  border-radius: 8px !important;
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
+  border-radius: var(--radius-md) !important;
+  text-transform: none;
+  letter-spacing: 0.025em;
+  transition: all var(--transition-fast);
+  
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+  
+  &:not(:disabled):active {
+    transform: translateY(0);
+  }
 }
 
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    border-radius: var(--radius-md) !important;
+  }
+}
+
+.mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    border-radius: var(--radius-xl) !important;
+    background-color: var(--surface-card) !important;
+  }
+}
+
+.mat-mdc-menu-panel {
+  border-radius: var(--radius-lg) !important;
+  background-color: var(--surface-elevated) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.mat-mdc-snack-bar-container {
+  .mdc-snackbar__surface {
+    border-radius: var(--radius-md) !important;
+  }
+}
+
+// 12. SKELETON LOADER
+// ----------------------------------------------------------------
 ngx-skeleton-loader .skeleton-loader.progress {
-  background: linear-gradient(90deg, #e8eaf6 25%, #c5cae9 50%, #e8eaf6 75%) !important;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton-base) 75%
+  ) !important;
   background-size: 200% 100% !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+// 13. ANIMATIONS
+// ----------------------------------------------------------------
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px var(--nasa-primary); }
+  50% { box-shadow: 0 0 20px var(--nasa-primary), 0 0 40px var(--nasa-accent); }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp var(--transition-slow) ease-out;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+// 14. PRINT STYLES
+// ----------------------------------------------------------------
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .no-print,
+  .mat-mdc-button,
+  .mat-toolbar,
+  nav,
+  aside {
+    display: none !important;
+  }
+  
+  .mat-mdc-card {
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    opacity: 0.7;
+  }
+}
+
+// 15. RESPONSIVE ADJUSTMENTS
+// ----------------------------------------------------------------
+@media (max-width: 768px) {
+  :root {
+    --header-height: 56px;
+    --content-padding: var(--space-3);
+    --text-4xl: 2rem;
+    --text-3xl: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --content-padding: var(--space-2);
+  }
+}
+
+.fullscreen-dialog {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .mdc-dialog__surface {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: hidden;
+  }
+
+  .mat-mdc-dialog-surface {
+    display: block;
+  }
+}
+
+// Remove default dialog container margin/padding
+.no-padding-dialog {
+  .mat-mdc-dialog-container .mdc-dialog__container {
+    padding: 0;
+  }
 }

@@ -35,8 +35,7 @@ export class Favorites {
     });
   }
 
-  removeFavorite(date: string, event: Event): void {
-    event.stopPropagation();
+  removeFavorite(date: string): void {
     this.favoritesService.removeFavorite(date);
   }
 
@@ -44,5 +43,9 @@ export class Favorites {
     if (confirm('Are you sure you want to remove all favorites?')) {
       this.favorites.forEach(fav => this.favoritesService.removeFavorite(fav.date));
     }
+  }
+
+  trackByDate(index: number, apod: any): string {
+    return apod.date;
   }
 }

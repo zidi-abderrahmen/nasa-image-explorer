@@ -1,64 +1,45 @@
-<mat-card class="apod-card skeleton-card">
+<mat-card 
+  class="apod-card skeleton-card" 
+  role="status" 
+  aria-label="Loading astronomy content" 
+  aria-busy="true">
+
   <!-- Image Area -->
-  <div class="image-wrapper">
-    <ngx-skeleton-loader
-      [theme]="{ 
-        height: '240px', 
-        width: '100%',
-        'border-radius': '20px 20px 0 0'
-      }"
-      appearance="line"
-      animation="progress">
+  <figure class="image-wrapper">
+    <ngx-skeleton-loader 
+      appearance="line" 
+      animation="progress"
+      class="skeleton-image">
     </ngx-skeleton-loader>
-  </div>
+  </figure>
 
   <!-- Content Area -->
   <mat-card-content class="content-modern">
     <!-- Title -->
     <ngx-skeleton-loader 
-      [theme]="{ 
-        height: '22px', 
-        width: '80%', 
-        'border-radius': '6px',
-        'margin-bottom': '12px'
-      }"
-      appearance="line"
-      animation="progress">
+      appearance="line" 
+      animation="progress"
+      class="skeleton-title">
     </ngx-skeleton-loader>
 
     <!-- Chips -->
     <ngx-skeleton-loader 
-      [theme]="{ 
-        height: '28px', 
-        width: '45%', 
-        'border-radius': '16px',
-        'margin-bottom': '16px'
-      }"
-      appearance="line"
-      animation="progress">
+      appearance="line" 
+      animation="progress"
+      class="skeleton-chips">
     </ngx-skeleton-loader>
 
-    <!-- Description Line 1 -->
+    <!-- Description Lines -->
     <ngx-skeleton-loader 
-      [theme]="{ 
-        height: '14px', 
-        width: '100%', 
-        'border-radius': '4px',
-        'margin-bottom': '8px'
-      }"
-      appearance="line"
-      animation="progress">
+      appearance="line" 
+      animation="progress"
+      class="skeleton-text">
     </ngx-skeleton-loader>
-
-    <!-- Description Line 2 -->
+    
     <ngx-skeleton-loader 
-      [theme]="{ 
-        height: '14px', 
-        width: '70%', 
-        'border-radius': '4px'
-      }"
-      appearance="line"
-      animation="progress">
+      appearance="line" 
+      animation="progress"
+      class="skeleton-text skeleton-text-short">
     </ngx-skeleton-loader>
   </mat-card-content>
 </mat-card>

@@ -16,37 +16,36 @@ import { Apod } from '../../../core/models/apod';
   styleUrl: './apod-card.scss',
 })
 export class ApodCard {
-  @Input({ required: true }) apod!: Apod;
-  @Input() isFavorite = false;
+  @Input() apod!: Apod;
   @Input() mode: 'browse' | 'favorite' = 'browse';
+  @Input() isFavorite = false;
   @Input() descriptionLength = 120;
 
-  @Output() toggleFavorite = new EventEmitter<Event>();
-  @Output() remove = new EventEmitter<Event>();
+  @Output() toggleFavorite = new EventEmitter<void>();
+  @Output() remove = new EventEmitter<void>();
 
   isImageLoaded = false;
 
   onImageLoad(event: Event): void {
-    const img = event.target as HTMLImageElement;
-    img.decode()
-      .then(() => this.isImageLoaded = true)
-      .catch(() => this.isImageLoaded = true);
+    this.isImageLoaded = true;
   }
 
   onToggleFavorite(event: Event): void {
+    event.preventDefault();
     event.stopPropagation();
-    this.toggleFavorite.emit(event);
+    this.toggleFavorite.emit();
   }
 
   onRemove(event: Event): void {
+    event.preventDefault();
     event.stopPropagation();
-    this.remove.emit(event);
+    this.remove.emit();
   }
 
   get displayImageUrl(): string {
-    if (this.apod.media_type === 'video' && this.apod.thumbnail_url) {
-      return this.apod.thumbnail_url;
+    if (this.apod?.media_type === 'video') {
+      return this.apod.thumbnail_url || 'assets/video-placeholder.jpg';
     }
-    return this.apod.url;
+    return this.apod?.url;
   }
 }

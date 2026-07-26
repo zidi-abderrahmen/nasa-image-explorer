@@ -1,94 +1,265 @@
-<div class="home-container">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <h1>NASA Astronomy Picture of the Day</h1>
-    <p class="subtitle">Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured.</p>
-  </div>
+<main class="home-container" role="main" aria-label="NASA Astronomy Picture of the Day">
+  
+  <div id="main-content" tabindex="-1"></div>
 
-  <div class="content-section">
+  <!-- Hero Section -->
+  <section class="hero-section" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+        <span>Daily Discovery</span>
+      </div>
+      <h1 id="hero-title" class="hero-title">
+        NASA Astronomy Picture<br>of the Day
+      </h1>
+      <p class="hero-subtitle">
+        Discover the cosmos! Each day a different image or photograph of our fascinating universe is featured, 
+        along with a brief explanation written by a professional astronomer.
+      </p>
+      <div class="hero-meta" *ngIf="todayApod?.date">
+        <mat-icon aria-hidden="true">event</mat-icon>
+        <time [attr.datetime]="todayApod?.date">{{ todayApod?.date | date:'fullDate' }}</time>
+      </div>
+    </div>
+    
+    <div class="hero-decoration" aria-hidden="true">
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+      <div class="hero-orb orb-3"></div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="content-section" aria-live="polite" aria-busy="loading">
+    
     <!-- Loading State -->
-    <div *ngIf="loading" class="loading-container">
-      <mat-spinner diameter="60"></mat-spinner>
-      <p>Loading today's astronomical wonder...</p>
+    <div *ngIf="loading" class="state-container loading-state" role="status" aria-label="Loading content">
+      <div class="skeleton-hero">
+        <div class="skeleton-badge"></div>
+        <div class="skeleton-title"></div>
+        <div class="skeleton-title skeleton-title-short"></div>
+        <div class="skeleton-subtitle"></div>
+      </div>
+      
+      <mat-card class="apod-card modern-card skeleton-card">
+        <div class="skeleton-media"></div>
+        <mat-card-content>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line skeleton-line-short"></div>
+          <div class="skeleton-line skeleton-line-shorter"></div>
+        </mat-card-content>
+        <mat-card-actions>
+          <div class="skeleton-button"></div>
+          <div class="skeleton-button"></div>
+        </mat-card-actions>
+      </mat-card>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error" class="error-container">
-      <mat-icon>error_outline</mat-icon>
-      <p>{{ error }}</p>
-      <button mat-raised-button color="primary" class="modern-button" (click)="loadTodayApod()">
-        <mat-icon>refresh</mat-icon>
+    <div *ngIf="error && !loading" class="state-container error-state" role="alert">
+      <div class="error-icon-wrapper">
+        <mat-icon class="error-icon" aria-hidden="true">error_outline</mat-icon>
+      </div>
+      <h2 class="error-title">Oops! Something went wrong</h2>
+      <p class="error-message">{{ error }}</p>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="modern-button action-button"
+        (click)="loadTodayApod()"
+        aria-label="Retry loading the astronomy picture">
+        <mat-icon aria-hidden="true">refresh</mat-icon>
         Try Again
       </button>
     </div>
 
     <!-- Main APOD Card -->
-    <mat-card *ngIf="!loading && !error && todayApod" class="apod-card modern-card">
-      <mat-card-header class="card-header-modern">
-        <div class="header-text">
-          <mat-card-title>{{ todayApod.title }}</mat-card-title>
-          <mat-card-subtitle>{{ todayApod.date }}</mat-card-subtitle>
-        </div>
-      </mat-card-header>
+    <article *ngIf="!loading && !error && todayApod" class="apod-article">
+      <!-- REMOVED: appearance="elevated" -->
+      <mat-card class="apod-card modern-card">
+        
+        <mat-card-header class="card-header-modern">
+          <div class="header-content">
+            <div class="header-meta">
+              <span class="media-badge" [class.image-badge]="todayApod.media_type === 'image'" [class.video-badge]="todayApod.media_type === 'video'">
+                <mat-icon aria-hidden="true">{{ todayApod.media_type === 'image' ? 'image' : 'play_circle' }}</mat-icon>
+                {{ todayApod.media_type === 'image' ? 'Image' : 'Video' }}
+              </span>
+              <span class="date-badge">
+                <mat-icon aria-hidden="true">calendar_today</mat-icon>
+                {{ todayApod.date | date:'mediumDate' }}
+              </span>
+            </div>
+            <mat-card-title class="apod-title">{{ todayApod.title }}</mat-card-title>
+            <mat-card-subtitle class="apod-subtitle" *ngIf="todayApod.copyright">
+              <mat-icon aria-hidden="true">person</mat-icon>
+              {{ todayApod.copyright }}
+            </mat-card-subtitle>
+          </div>
+        </mat-card-header>
 
-      <div class="media-showcase" *ngIf="todayApod.media_type === 'image' || todayApod.media_type === 'video'">
-        <div class="image-container" *ngIf="todayApod.media_type === 'image'">
-          <img [src]="todayApod.url" [alt]="todayApod.title" mat-card-image>
-        </div>
+        <figure class="media-showcase" *ngIf="todayApod.media_type === 'image' || todayApod.media_type === 'video'">
+          <div class="media-wrapper" [class.is-image]="todayApod.media_type === 'image'" [class.is-video]="todayApod.media_type === 'video'">
+            
+            <div class="image-container" *ngIf="todayApod.media_type === 'image'">
+              <img 
+                [src]="todayApod.url" 
+                [alt]="todayApod.title"
+                loading="eager"
+                class="apod-image"
+                (load)="onImageLoad()"
+                [class.loaded]="imageLoaded">
+              <div class="image-loader" *ngIf="!imageLoaded">
+                <mat-spinner diameter="40" strokeWidth="3"></mat-spinner>
+              </div>
+              <button 
+                mat-icon-button 
+                class="fullscreen-btn"
+                (click)="openFullscreen()"
+                aria-label="View image in fullscreen"
+                title="Fullscreen">
+                <mat-icon>fullscreen</mat-icon>
+              </button>
+            </div>
 
-        <div class="video-container" *ngIf="todayApod.media_type === 'video'">
-          <iframe 
-            [src]="todayApod.url" 
-            frameborder="0" 
-            allowfullscreen>
-          </iframe>
-        </div>
-      </div>
+            <div class="video-container" *ngIf="todayApod.media_type === 'video'">
+              <div class="video-wrapper">
+                <iframe 
+                  [src]="todayApod.url | safeUrl" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  title="{{ todayApod.title }} - Video player"
+                  loading="lazy">
+                </iframe>
+              </div>
+            </div>
+          </div>
+          
+          <figcaption class="media-caption" *ngIf="todayApod.media_type === 'image'">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            <span>Click the image to view in HD quality</span>
+          </figcaption>
+        </figure>
 
-      <mat-card-content class="content-modern">
-        <p class="explanation">{{ todayApod.explanation }}</p>
-        <p class="copyright" *ngIf="todayApod.copyright">
-          <mat-icon>copyright</mat-icon>
-          {{ todayApod.copyright }}
-        </p>
-      </mat-card-content>
+        <mat-card-content class="content-modern">
+          <div class="explanation-wrapper">
+            <h3 class="section-label">
+              <mat-icon aria-hidden="true">auto_stories</mat-icon>
+              Explanation
+            </h3>
+            <p class="explanation-text">{{ todayApod.explanation }}</p>
+          </div>
+          
+          <!-- REMOVED: tags section (NASA API doesn't return keywords) -->
+        </mat-card-content>
 
-      <mat-card-actions class="actions-modern">
-        <button mat-raised-button color="primary" class="modern-button" [routerLink]="['/detail', todayApod.date]">
-          <mat-icon>info</mat-icon>
-          View Details
-        </button>
-        <button mat-raised-button class="modern-button" (click)="toggleFavorite()" [color]="isFavorite() ? 'accent' : ''">
-          <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
-          {{ isFavorite() ? 'Remove from Favorites' : 'Add to Favorites' }}
-        </button>
-        <a mat-raised-button class="modern-button" [href]="todayApod.hdurl || todayApod.url" target="_blank" *ngIf="todayApod.media_type === 'image'">
-          <mat-icon>download</mat-icon>
-          HD Image
-        </a>
-      </mat-card-actions>
-    </mat-card>
+        <mat-card-actions class="actions-modern">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            class="modern-button action-button"
+            [routerLink]="['/detail', todayApod.date]"
+            aria-label="View full details for {{ todayApod.title }}">
+            <mat-icon aria-hidden="true">info</mat-icon>
+            View Details
+          </button>
+          
+          <button 
+            mat-raised-button 
+            class="modern-button action-button favorite-btn"
+            [class.is-favorite]="isFavorite()"
+            [color]="isFavorite() ? 'accent' : ''"
+            (click)="toggleFavorite()"
+            [attr.aria-label]="isFavorite() ? 'Remove from favorites' : 'Add to favorites'">
+            <mat-icon aria-hidden="true">{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ isFavorite() ? 'Saved' : 'Save' }}
+          </button>
+          
+          <a 
+            mat-raised-button 
+            class="modern-button action-button"
+            [href]="todayApod.hdurl || todayApod.url" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            *ngIf="todayApod.media_type === 'image'"
+            aria-label="Download high resolution image">
+            <mat-icon aria-hidden="true">download</mat-icon>
+            HD Image
+          </a>
+          
+          <button 
+            mat-stroked-button 
+            class="modern-button action-button share-btn"
+            (click)="shareApod()"
+            aria-label="Share this astronomy picture">
+            <mat-icon aria-hidden="true">share</mat-icon>
+            Share
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </article>
 
     <!-- Quick Links -->
-    <div class="quick-links" *ngIf="!loading && !error">
-      <h2>Explore More</h2>
-      <div class="link-cards">
-        <mat-card class="link-card modern-card" routerLink="/gallery">
-          <mat-icon>photo_library</mat-icon>
-          <h3>Gallery</h3>
-          <p>Browse random astronomical images</p>
-        </mat-card>
-        <mat-card class="link-card modern-card" routerLink="/search">
-          <mat-icon>search</mat-icon>
-          <h3>Search</h3>
-          <p>Find images by date or range</p>
-        </mat-card>
-        <mat-card class="link-card modern-card" routerLink="/favorites">
-          <mat-icon>favorite</mat-icon>
-          <h3>Favorites</h3>
-          <p>View your saved images</p>
-        </mat-card>
+    <nav class="quick-links" *ngIf="!loading && !error" aria-label="Quick navigation">
+      <div class="section-header">
+        <h2 class="section-title">Explore More</h2>
+        <p class="section-desc">Continue your journey through the cosmos</p>
       </div>
-    </div>
-  </div>
-</div>
+      
+      <div class="link-cards">
+        <a 
+          mat-card 
+          class="link-card modern-card" 
+          routerLink="/gallery"
+          role="button"
+          tabindex="0"
+          aria-label="Browse the gallery of astronomical images">
+          <div class="link-icon-wrapper gallery-icon">
+            <mat-icon aria-hidden="true">photo_library</mat-icon>
+          </div>
+          <h3>Gallery</h3>
+          <p>Browse random astronomical images from NASA's vast collection</p>
+          <div class="link-arrow">
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </div>
+        </a>
+
+        <a 
+          mat-card 
+          class="link-card modern-card" 
+          routerLink="/search"
+          role="button"
+          tabindex="0"
+          aria-label="Search for images by date or range">
+          <div class="link-icon-wrapper search-icon">
+            <mat-icon aria-hidden="true">search</mat-icon>
+          </div>
+          <h3>Search</h3>
+          <p>Find images by specific date or explore a range of dates</p>
+          <div class="link-arrow">
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </div>
+        </a>
+
+        <a 
+          mat-card 
+          class="link-card modern-card" 
+          routerLink="/favorites"
+          role="button"
+          tabindex="0"
+          aria-label="View your saved favorite images">
+          <div class="link-icon-wrapper favorites-icon">
+            <mat-icon aria-hidden="true">favorite</mat-icon>
+          </div>
+          <h3>Favorites</h3>
+          <p>View and manage your personal collection of saved images</p>
+          <div class="link-arrow">
+            <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          </div>
+        </a>
+      </div>
+    </nav>
+  </section>
+</main>

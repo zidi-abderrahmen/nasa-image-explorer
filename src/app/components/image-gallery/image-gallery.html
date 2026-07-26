@@ -1,46 +1,105 @@
-<div class="gallery-container">
+<main class="gallery-container" role="main" aria-label="Random astronomy image gallery">
+  
   <!-- Header Section -->
-  <div class="header">
-    <h1>Random Image Gallery</h1>
-    <p class="subtitle">Explore a collection of random astronomical images from NASA's archive</p>
-    <button mat-raised-button color="primary" class="modern-button" (click)="loadRandomApods()" [disabled]="loading">
-      <mat-icon>refresh</mat-icon>
-      Load New Gallery
-    </button>
-  </div>
+  <header class="gallery-header">
+    <div class="header-content">
+      <div class="header-badge">
+        <mat-icon aria-hidden="true">shuffle</mat-icon>
+        <span>Random Collection</span>
+      </div>
+      <h1 class="header-title">Random Image Gallery</h1>
+      <p class="header-subtitle">
+        Explore a curated collection of random astronomical images from NASA's vast archive. 
+        Each refresh brings new wonders of the cosmos.
+      </p>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="modern-button refresh-btn"
+        (click)="loadRandomApods()" 
+        [disabled]="loading"
+        aria-label="Load new random gallery">
+        <mat-icon *ngIf="!loading" aria-hidden="true">refresh</mat-icon>
+        <mat-spinner *ngIf="loading && apods.length === 0" diameter="20" strokeWidth="3"></mat-spinner>
+        {{ loading && apods.length === 0 ? 'Loading...' : 'Load New Gallery' }}
+      </button>
+    </div>
+    
+    <!-- Decorative background -->
+    <div class="header-decoration" aria-hidden="true">
+      <div class="deco-orb orb-1"></div>
+      <div class="deco-orb orb-2"></div>
+    </div>
+  </header>
 
-  <!-- 🆕 SKELETON GRID: يظهر في اللودينغ الأولاني -->
-  <div class="gallery-grid" *ngIf="loading && apods.length === 0">
-    <app-apod-skeleton-card *ngFor="let _ of [].constructor(skeletonCount)"></app-apod-skeleton-card>
-  </div>
+  <!-- Initial Loading State (Skeleton Grid) -->
+  <section 
+    class="gallery-section skeleton-section" 
+    *ngIf="loading && apods.length === 0" 
+    aria-label="Loading gallery content"
+    aria-busy="true">
+    <div class="gallery-grid">
+      <app-apod-skeleton-card *ngFor="let _ of skeletonArray; trackBy: trackByIndex"></app-apod-skeleton-card>
+    </div>
+  </section>
 
   <!-- Error State -->
-  <div *ngIf="error" class="error-container">
-    <mat-icon class="status-icon">error_outline</mat-icon>
-    <p>{{ error }}</p>
-    <button mat-raised-button color="primary" class="modern-button" (click)="loadRandomApods()">
-      <mat-icon>refresh</mat-icon>
+  <section class="state-container error-state" *ngIf="error && !loading" role="alert" aria-live="assertive">
+    <div class="state-icon-wrapper">
+      <mat-icon class="state-icon" aria-hidden="true">error_outline</mat-icon>
+    </div>
+    <h2 class="state-title">Unable to Load Gallery</h2>
+    <p class="state-message">{{ error }}</p>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="modern-button action-btn"
+      (click)="loadRandomApods()"
+      aria-label="Retry loading gallery">
+      <mat-icon aria-hidden="true">refresh</mat-icon>
       Try Again
     </button>
-  </div>
+  </section>
+
+  <!-- Empty State (Initial View) -->
+  <section class="state-container empty-state" *ngIf="!loading && !error && apods.length === 0" aria-label="No images loaded">
+    <div class="state-icon-wrapper empty-icon-wrapper">
+      <mat-icon class="state-icon" aria-hidden="true">photo_library</mat-icon>
+    </div>
+    <h2 class="state-title">Ready to Explore?</h2>
+    <p class="state-message">Click the button above to discover amazing astronomical images from NASA.</p>
+  </section>
 
   <!-- Gallery Grid -->
-  <div class="gallery-grid" *ngIf="apods.length > 0">
-    <app-apod-card 
-      *ngFor="let apod of apods" 
-      [apod]="apod"
-      [isFavorite]="isFavorite(apod.date)"
-      (toggleFavorite)="toggleFavorite(apod, $event)"
-      class="modern-card-wrapper">
-    </app-apod-card>
+  <section class="gallery-section" *ngIf="apods.length > 0" aria-label="Gallery images">
+    <div class="gallery-grid">
+      <app-apod-card 
+        *ngFor="let apod of apods; trackBy: trackByDate" 
+        [apod]="apod"
+        [isFavorite]="isFavorite(apod.date)"
+        (toggleFavorite)="toggleFavorite(apod)"
+        class="gallery-card-wrapper"
+        role="listitem">
+      </app-apod-card>
+    </div>
+  </section>
+
+  <!-- Pagination Loading (Inline) -->
+  <div class="inline-loading" *ngIf="loading && apods.length > 0" role="status" aria-label="Loading more images">
+    <mat-spinner diameter="32" strokeWidth="3"></mat-spinner>
+    <span>Loading more wonders...</span>
   </div>
 
   <!-- Load More Action -->
-  <div class="load-more" *ngIf="apods.length > 0">
-    <button mat-raised-button color="accent" class="modern-button load-more-btn" (click)="loadMore()" [disabled]="loading">
-      <mat-spinner *ngIf="loading" diameter="24"></mat-spinner>
-      <mat-icon *ngIf="!loading">add</mat-icon>
-      {{ loading ? 'Loading...' : 'Load More' }}
+  <div class="load-more" *ngIf="apods.length > 0 && !loading">
+    <button 
+      mat-raised-button 
+      color="accent" 
+      class="modern-button load-more-btn" 
+      (click)="loadMore()"
+      aria-label="Load more random images">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      Load More
     </button>
   </div>
-</div>
+</main>
