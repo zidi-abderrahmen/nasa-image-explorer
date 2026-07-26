@@ -1,0 +1,346 @@
+/* ============================================================
+   404 Not Found - Production Ready
+   ============================================================ */
+
+.not-found-container {
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-5);
+  background: linear-gradient(
+    180deg,
+    var(--surface-bg) 0%,
+    var(--surface-elevated) 50%,
+    var(--surface-bg) 100%
+  );
+  overflow: hidden;
+}
+
+// 1. STARS BACKGROUND
+// ----------------------------------------------------------------
+.stars-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 3s infinite ease-in-out;
+    animation-delay: calc(var(--i) * 0.1s);
+    top: calc(var(--i) * 7% + 5%);
+    left: calc(var(--i) * 13% + 3%);
+
+    &:nth-child(3n) {
+      width: 3px;
+      height: 3px;
+      background: var(--nasa-primary-light);
+      animation-duration: 4s;
+    }
+
+    &:nth-child(5n) {
+      width: 1px;
+      height: 1px;
+      background: var(--nasa-accent-light);
+      animation-duration: 2.5s;
+    }
+  }
+}
+
+// 2. CONTENT WRAPPER
+// ----------------------------------------------------------------
+.content-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// 3. ERROR CODE (404 with Planet)
+// ----------------------------------------------------------------
+.error-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+
+  .digit {
+    font-size: clamp(5rem, 15vw, 10rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--nasa-primary);
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(25, 118, 210, 0.2);
+    animation: float 6s ease-in-out infinite;
+    user-select: none;
+
+    &.digit-4:first-child {
+      animation-delay: 0s;
+    }
+
+    &.digit-4:last-child {
+      animation-delay: 1s;
+    }
+  }
+}
+
+// Planet (replaces the 0)
+.planet-wrapper {
+  width: clamp(80px, 20vw, 140px);
+  height: clamp(80px, 20vw, 140px);
+  animation: float 5s ease-in-out infinite 0.5s;
+}
+
+.planet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--nasa-accent) 0%, var(--nasa-primary) 100%);
+  box-shadow: 
+    inset -10px -10px 20px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(124, 77, 255, 0.3),
+    0 0 60px rgba(25, 118, 210, 0.2);
+  overflow: hidden;
+
+  .planet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160%;
+    height: 20%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+
+  .planet-crater {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.15);
+
+    &.crater-1 {
+      width: 20%;
+      height: 20%;
+      top: 25%;
+      left: 20%;
+    }
+
+    &.crater-2 {
+      width: 12%;
+      height: 12%;
+      top: 55%;
+      right: 25%;
+    }
+
+    &.crater-3 {
+      width: 8%;
+      height: 8%;
+      bottom: 20%;
+      left: 40%;
+    }
+  }
+}
+
+// 4. ERROR MESSAGE
+// ----------------------------------------------------------------
+.error-message {
+  margin-bottom: var(--space-6);
+
+  .error-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+    letter-spacing: -0.02em;
+  }
+
+  .error-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--text-secondary);
+    line-height: var(--line-height-relaxed);
+    margin: 0 auto;
+    max-width: 450px;
+  }
+}
+
+// 5. ACTIONS
+// ----------------------------------------------------------------
+.error-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .modern-button {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: var(--space-2) !important;
+    white-space: nowrap !important;
+    border-radius: var(--radius-full) !important;
+    padding: 0 var(--space-5) !important;
+    height: 48px;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.025em;
+    transition: all var(--transition-fast);
+    text-decoration: none !important;
+    color: var(--text-on-primary);
+
+    mat-icon {
+      margin: 0 !important;
+      flex-shrink: 0;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    &.home-btn {
+      background: linear-gradient(135deg, var(--nasa-primary) 0%, var(--nasa-accent) 100%);
+    }
+
+    &.back-btn {
+      border-color: var(--border-subtle);
+      color: var(--text-secondary);
+
+      &:hover {
+        background-color: var(--surface-elevated);
+        color: var(--text-primary);
+        border-color: var(--nasa-primary);
+      }
+    }
+  }
+}
+
+// 6. ORBIT DECORATION
+// ----------------------------------------------------------------
+.orbit-decoration {
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  pointer-events: none;
+  opacity: 0.3;
+
+  .orbit-path {
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--border-subtle);
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 20s linear infinite;
+  }
+
+  .orbit-dot {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: var(--nasa-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--nasa-primary);
+  }
+}
+
+// 7. ANIMATIONS
+// ----------------------------------------------------------------
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 8. REDUCED MOTION
+// ----------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .digit,
+  .planet-wrapper,
+  .orbit-path {
+    animation: none !important;
+  }
+}
+
+// 9. RESPONSIVE
+// ----------------------------------------------------------------
+@media (max-width: 768px) {
+  .not-found-container {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .error-code {
+    gap: var(--space-2);
+  }
+
+  .error-actions {
+    flex-direction: column;
+    align-items: center;
+
+    .modern-button {
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
+  }
+
+  .orbit-decoration {
+    display: none;
+  }
+}
+
+// 10. PRINT
+// ----------------------------------------------------------------
+@media print {
+  .stars-bg,
+  .orbit-decoration,
+  .planet-ring,
+  .planet-crater {
+    display: none !important;
+  }
+
+  .planet {
+    background: #3f51b5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

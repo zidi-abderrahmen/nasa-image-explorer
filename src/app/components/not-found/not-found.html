@@ -1,0 +1,62 @@
+<main class="not-found-container" role="main" aria-label="Page not found">
+  
+  <!-- Stars Background -->
+  <div class="stars-bg" aria-hidden="true">
+    <div class="star" *ngFor="let star of stars; let i = index" [style.--i]="i"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <!-- 404 Number -->
+    <div class="error-code" aria-label="404 error">
+      <span class="digit digit-4">4</span>
+      <div class="planet-wrapper">
+        <div class="planet">
+          <div class="planet-ring"></div>
+          <div class="planet-crater crater-1"></div>
+          <div class="planet-crater crater-2"></div>
+          <div class="planet-crater crater-3"></div>
+        </div>
+      </div>
+      <span class="digit digit-4">4</span>
+    </div>
+
+    <!-- Message -->
+    <div class="error-message">
+      <h1 class="error-title">Houston, We Have a Problem</h1>
+      <p class="error-subtitle">
+        The page you're looking for has drifted into deep space and cannot be found.
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="error-actions">
+      <a 
+        mat-raised-button 
+        color="primary" 
+        class="modern-button home-btn"
+        routerLink="/"
+        aria-label="Return to home page">
+        <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+        Return to Earth
+      </a>
+      
+      <button 
+        mat-stroked-button 
+        class="modern-button back-btn"
+        (click)="goBack()"
+        type="button"
+        aria-label="Go back to previous page">
+        <mat-icon aria-hidden="true">arrow_back</mat-icon>
+        Go Back
+      </button>
+    </div>
+
+    <!-- Decorative Orbit -->
+    <div class="orbit-decoration" aria-hidden="true">
+      <div class="orbit-path">
+        <div class="orbit-dot"></div>
+      </div>
+    </div>
+  </div>
+</main>
