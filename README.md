@@ -10,7 +10,8 @@ The NASA Image Explorer is an Angular application designed to showcase images an
 
 ## Live Demo
 
-<video src=".docs/live-demo.mp4" width="100%" controls></video>
+
+[Watch it now](https://github.com/zidi-abderrahmen/nasa-image-explorer/blob/main/.docs/live-demo.mp4)
 
 ## Key Features
 
