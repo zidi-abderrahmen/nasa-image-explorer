@@ -1,0 +1,37 @@
+<div class="video-player-container">
+    <!-- YouTube / Vimeo (iframe) -->
+    <div *ngIf="(apodUrl | videoUrl).type === 'youtube'" class="video-embed">
+    <iframe 
+        [src]="(apodUrl | videoUrl).url"
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        [title]="title + ' - video player'">
+    </iframe>
+    </div>
+
+    <!-- Direct MP4 (HTML5 video) -->
+    <div *ngIf="(apodUrl | videoUrl).type === 'direct'" class="video-direct">
+    <video controls preload="metadata" [poster]="thumbnailUrl">
+        <source [src]="apodUrl" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    </div>
+
+    <!-- External Link Fallback -->
+    <div *ngIf="(apodUrl | videoUrl).type === 'external'" class="video-external">
+    <div class="external-placeholder">
+        <mat-icon>videocam_off</mat-icon>
+        <p>This video cannot be embedded directly.</p>
+        <a 
+        mat-raised-button 
+        color="primary" 
+        [href]="apodUrl" 
+        target="_blank" 
+        rel="noopener noreferrer">
+        <mat-icon>open_in_new</mat-icon>
+        Watch on NASA Website
+        </a>
+    </div>
+    </div>
+</div>
