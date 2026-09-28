@@ -35,6 +35,7 @@
   - [Production Build](#production-build)
 - [Testing](#-testing)
 - [Architecture](#-architecture-overview)
+  - [Architecture Decisions](#architecture-decisions)
 - [API Reference](#-api-reference)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
@@ -61,9 +62,9 @@ Whether you're viewing today's featured image, exploring historical entries, or 
 | **Date Range Search** | Search for specific APOD entries by selecting a start and end date. |
 | **Favorites System** | Save and manage your favorite APODs with automatic local storage persistence. |
 | **Interactive Fullscreen Viewer** | Zoom (mouse wheel, pinch, keyboard), pan (drag, arrow keys), and reset — all within a smooth modal overlay. |
-| **Smart HTTP Caching** | Custom interceptor caches NASA API GET requests to minimize redundant network calls. |
+| **Smart HTTP Caching** | Custom interceptor caches NASA API GET requests to minimize redundant network calls. *(implemented; not yet enabled — see [HTTP Layer](#http-layer))* |
 | **Robust Error Handling** | Graceful handling of API errors including rate limiting (429), network failures, and server errors with user-friendly messages. |
-| **Server-Side Rendering (SSR)** | Pre-rendered pages for faster initial loads and improved SEO. |
+| **Server-Side Rendering (SSR)** | Pre-rendered pages for faster initial loads and improved SEO. *(local build; the live demo uses an SPA fallback)* |
 | **Fully Responsive** | Optimized layout for desktop, tablet, and mobile devices. |
 
 ---
@@ -204,18 +205,23 @@ nasa-image-explorer/
 
 ### Environment Setup
 
-The application requires a NASA API key for fetching APOD data.
+The application requires a NASA API key for fetching APOD data. Get a free key from the [NASA API Portal](https://api.nasa.gov/).
 
-1. Copy the example environment file:
+1. Seed your local environment file from the tracked template:
    ```bash
-   cp src/environments/environment.example.ts src/environments/environment.local.ts
+   cp src/environments/environment.development.ts src/environments/environment.local.ts
    ```
 
-2. Open `src/environments/environment.local.ts` and replace `YOUR_NASA_API_KEY_HERE` with your actual key.
+2. Open `src/environments/environment.local.ts` and replace `YOUR_API_KEY_HERE` with your actual key.
 
-3. Obtain a free API key from [NASA API Portal](https://api.nasa.gov/).
+3. Start the dev server. `ng serve` defaults to the `development` configuration, which swaps `environment.ts` for `environment.local.ts`:
+   ```bash
+   ng serve
+   ```
 
-> ⚠️ `environment.local.ts` is `.gitignore`d by default. Never commit your API key.
+> ⚠️ `environment.local.ts` is `.gitignore`d, so your personal key is never committed.
+
+> 🔑 **Any key served to a browser is public.** `NasaApi` reads `environment.nasaApiKey` in the client, and `scripts/set-env.js` inlines `$NASA_API_KEY` straight into the bundle at build time. There is no server-side proxy, so the key behind the [live demo](https://nasa-image-explorer.pages.dev) is readable in the page source by anyone. Only use a dedicated, rate-limited demo key for deployments — never a personal or production key — and rotate it if it is ever exposed. `ng build --configuration production` reads the committed `environment.ts` placeholder and will not work until a real key is generated into it.
 
 ### Development
 
@@ -273,11 +279,23 @@ Reactive state is managed through **RxJS `BehaviorSubject`** instances within de
 This lightweight pattern provides observable streams without the overhead of a global store like NgRx.
 
 ### HTTP Layer
-Two global interceptors handle cross-cutting concerns:
 | Interceptor | Purpose |
 |-------------|---------|
-| `HttpCacheInterceptor` | Caches successful GET requests for a configurable TTL, reducing API calls and improving perceived performance. |
 | `errorInterceptor` | Catches HTTP errors and surfaces user-friendly messages for common scenarios (network failure, rate limiting, server errors). |
+| `HttpCacheInterceptor` | Serves repeat `GET`s from an in-memory cache for a 5-minute TTL, reducing API calls. |
+
+> ⚠️ `HttpCacheInterceptor` is implemented and unit-tested but **not yet registered** — `app.config.ts` currently only wires up `errorInterceptor`. Until it is added to `withInterceptors([...])` (as a functional interceptor) it is dead code and no caching happens at runtime.
+
+### Architecture Decisions
+
+**Why `BehaviorSubject` instead of a global store?**
+Each screen owns one small, isolated slice of state, so a per-feature service holding a single subject is enough — a global store would add boilerplate and ceremony for three values. `BehaviorSubject` specifically over a plain `Subject` because it replays the current value to late subscribers: a component that subscribes *after* the HTTP response has already landed still gets the data synchronously on subscribe, instead of rendering an empty state and waiting for the next emission. That is what lets `ngOnInit` branch on `currentApod` / `currentApods` without a flash of empty content. Subjects are handed out via `asObservable()` so consumers cannot push into them, and all writes go through explicit methods (`setApod`, `addApods`, `toggleFavorite`) — which keeps state transitions traceable and testable. Holding state in root-provided services also means it survives component re-creation and route navigation.
+
+**Why an HTTP cache interceptor?**
+NASA enforces hourly rate limits on the APOD API, and the UI requests the same `urlWithParams` repeatedly — navigating home → detail → back re-fetches identical URLs. A `Map` keyed on `urlWithParams` collapses those duplicates and makes repeat navigation feel instant, without adding a caching layer dependency. The TTL is deliberately short (5 minutes): APOD only changes once a day, so a longer window would serve stale data while breaking the "today's picture" guarantee on a page reload. Only `GET` requests are intercepted; anything else passes straight through.
+
+**Why SSR?**
+APOD content is the page's entire value, so pre-rendering gives a meaningful first paint and lets the APOD titles be indexable. Note that the live demo on Cloudflare Pages currently uses a `/* /index.html 200` SPA fallback rather than the Express SSR server, so the deployed site hydrates client-side; run `npm run serve:ssr:nasa-image-explorer` to exercise real SSR locally.
 
 ### Shared Components
 The `src/app/shared` directory houses reusable, framework-agnostic UI primitives:
